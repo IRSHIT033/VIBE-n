@@ -21,8 +21,40 @@ app.get("/", (req, res) => {
 app.use("/api/user", router);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
+
 app.use(not_found);
 app.use(error_handler);
-app.listen(port, () => {
+
+const server = app.listen(port, () => {
   console.log("server is running on " + port);
+});
+
+import * as io from "socket.io";
+const socketio = new io.Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+socketio.on("connection", (socket) => {
+  console.log("connected to SOCKET.IO".blue.bold);
+  socket.on("setup", (user) => {
+    socket.join(user._id);
+    //console.log(`${user._id} joins`);
+    socket.emit("connected");
+  });
+
+  socket.on("joinRoom", (room) => {
+    socket.join(room);
+    console.log(`user joined in :${room}`);
+  });
+  socket.on("newMsg", (newMsgReceived) => {
+    var chat = newMsgReceived.chat;
+    if (!chat.users) return console.log("chat.users not defined");
+    chat.users.forEach((user) => {
+      if (user._id == newMsgReceived.sender._id) return;
+      socket.in(user._id).emit("got the msg", newMsgReceived);
+    });
+  });
 });

@@ -14,7 +14,7 @@ export const Auth = asyncHandler(async (req, res, next) => {
       req.user = await User.findById(decoded.id).select("-password");
       next();
     } catch (err) {
-      req.statusCode(401);
+      res.status(401);
       throw new Error("Not Authorized ");
     }
   }
