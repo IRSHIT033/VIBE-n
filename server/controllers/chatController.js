@@ -12,7 +12,7 @@ export const accessChat = asyncHandler(async (req, res) => {
     isGroupChat: false,
     $and: [
       { users: { $elemMatch: { $eq: req.user._id } } },
-      { users: { $elemMatch: { $eq: req.userId } } },
+      { users: { $elemMatch: { $eq: userId } } },
     ],
   })
     .populate("users", "-password")
@@ -53,7 +53,7 @@ export const getChats = asyncHandler(async (req, res) => {
       .sort({ updatedAt: -1 })
       .then(async (results) => {
         results = await User.populate(results, {
-          path: "lastestMessage.sender",
+          path: "latestMessage.sender",
           select: "name pic email",
         });
         res.status(200).send(results);

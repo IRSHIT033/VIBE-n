@@ -11,6 +11,12 @@ const userSchema = mongoose.Schema(
       default:
         "https://api-private.atlassian.com/users/8b3597e8a7d1d8f2ed7f58bcab1946b8/avatar",
     },
+
+    isAdmin: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,
