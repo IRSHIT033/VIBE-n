@@ -26,10 +26,8 @@ export const sendMessage = asyncHandler(async (req, res) => {
       latestMessage: message,
     });
     res.json(message);
-    console.log(message);
   } catch (err) {
     res.status(400);
-    console.log(err);
     throw new Error(err.message);
   }
 });

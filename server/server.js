@@ -5,6 +5,7 @@ import colors from "colors";
 import router from "./routes/userRoutes.js";
 import chatRouter from "./routes/chatRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
+import User from "./models/user_model.js";
 import { not_found, error_handler } from "./middleware/errorMiddleware.js";
 dotenv.config();
 
@@ -33,20 +34,18 @@ const socketio = new io.Server(server, {
   },
 });
 
+var users = [];
 socketio.on("connection", (socket) => {
-  var Users = [];
-  console.log("connected to SOCKET.IO".blue.bold);
-  socket.on("setup", (user) => {
+  const socketId = socket.id;
+  socket.on("setup", async (user) => {
     socket.join(user._id);
-    Users = [user._id, ...Users];
-    //console.log(`${user._id} joins`);
-    socket.emit("connected " + user._id);
+    users.push({ ...user, socketId });
+    console.log(`user ${user.name} joined  `);
+    socket.emit("connected", users);
   });
 
   socket.on("joinRoom", (room) => {
     socket.join(room);
-
-    console.log(`user joined in :${room}`);
   });
 
   socket.on("newMsg", (newMsgReceived) => {
@@ -62,19 +61,24 @@ socketio.on("connection", (socket) => {
   socket.on("typing stopped", (room) => socket.in(room).emit("typing stopped"));
 
   socket.off("setup", (user) => {
-    console.log("USER DISCONNECTED");
-    Users.pop(user._id);
+    console.log(`${user} DISCONNECTED`);
     socket.leave(user._id);
   });
 
-  socket.on("checkActive", (user) => {
-    const userId = user._id;
-    const u = Users[userId];
-    if (user) {
-      res = { isActive: true };
-    } else {
-      res = { isActive: false };
-    }
-    socket.in(socket.id).emit("isActive", res);
+  socket.on("disconnect", async () => {
+    users.forEach((user) => {
+      if (user.socketId === socket.id) {
+        let Id = user._id;
+        for (const key in user) {
+          delete user[key];
+        }
+      }
+    });
+
+    console.log("user disconnected");
+  });
+
+  socket.on("online users", () => {
+    socket.emit("online users", users);
   });
 });
