@@ -1,9 +1,9 @@
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { VStack } from "@chakra-ui/layout";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/toast";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@chakra-ui/button";
 import axios from "axios";
 
@@ -15,7 +15,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const submitHandel = async () => {
     setLoading(true);
@@ -57,7 +57,7 @@ const Login = () => {
       localStorage.setItem("Info", JSON.stringify(data));
 
       setLoading(false);
-      history.push("/chats");
+      navigate("/chats");
     } catch (error) {
       toast({
         title: "Error Occured!",

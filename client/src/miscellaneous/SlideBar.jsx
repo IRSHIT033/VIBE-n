@@ -25,7 +25,7 @@ import ChatLoading from "./ChatLoading";
 import { Tooltip } from "@chakra-ui/tooltip";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ProfileModel from "./ProfileModel";
 import { ChatState } from "../Context/ChatProvider";
@@ -48,11 +48,11 @@ function SlideBar() {
     notification,
     setNotification,
   } = ChatState();
-  const history = useHistory();
+  const history = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const logoutHandler = () => {
     localStorage.removeItem("Info");
-    history.push("/");
+    navigate("/");
   };
 
   const handleSearch = async () => {

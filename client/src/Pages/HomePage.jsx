@@ -14,13 +14,13 @@ import {
 
 import Login from "../components/Authentication/Login";
 import Signup from "../components/Authentication/Signup";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("Info"));
-    if (user) history.push("/chats");
+    if (user) navigate("/chats");
   }, [history]);
   return (
     <Container maxW="xl" centerContent>
@@ -41,8 +41,7 @@ const HomePage = () => {
           fontWeight="bold"
           color="rgba(255, 166, 0, 1)"
         >
-          Chat-A-holic{" "}
-          <FontAwesomeIcon id="sms-icon" icon={faSms}></FontAwesomeIcon>
+          Vibe'n <FontAwesomeIcon id="sms-icon" icon={faSms}></FontAwesomeIcon>
         </Text>
       </Box>
       <Box

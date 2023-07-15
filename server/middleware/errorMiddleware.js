@@ -1,3 +1,5 @@
+import { logEvents } from "./logEvents";
+
 export const not_found = (req, res, next) => {
   const error = new Error(`Not Found - ${req.originalUrl}`);
   res.status(404);
@@ -5,6 +7,7 @@ export const not_found = (req, res, next) => {
 };
 
 export const error_handler = (err, req, res, next) => {
+  logEvents(`${err.name}: ${err.message}`, "errorLog.txt");
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode);
   res.json({
