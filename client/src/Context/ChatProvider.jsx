@@ -5,6 +5,7 @@ const ChatContext = createContext();
 
 const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
+  const [auth,setAuth]=useState()
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setchats] = useState([]);
   const [notification, setNotification] = useState([]);
@@ -15,11 +16,13 @@ const ChatProvider = ({ children }) => {
     setUser(userInfo);
 
     if (!userInfo) navigate("/");
-  }, [history]);
+  }, []);
 
   return (
     <ChatContext.Provider
       value={{
+        auth,
+        setAuth,
         user,
         setUser,
         selectedChat,

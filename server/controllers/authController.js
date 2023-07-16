@@ -1,9 +1,9 @@
-import User from "../model/User";
+import User from "../models/user_model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 
-export const handleLogin = asyncHandler(async (req, res) => {
+const handleLogin = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
 
   console.log(`cookie available at login: ${JSON.stringify(cookies)}`);
@@ -65,3 +65,5 @@ export const handleLogin = asyncHandler(async (req, res) => {
     res.sendStatus(401);
   }
 });
+
+export default handleLogin;

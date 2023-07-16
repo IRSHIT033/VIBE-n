@@ -5,7 +5,6 @@ import colors from "colors";
 import router from "./routes/userRoutes.js";
 import chatRouter from "./routes/chatRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
-import User from "./models/user_model.js";
 import { not_found, error_handler } from "./middleware/errorMiddleware.js";
 dotenv.config();
 
@@ -30,18 +29,15 @@ import * as io from "socket.io";
 const socketio = new io.Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
   },
 });
 
-var users = [];
 socketio.on("connection", (socket) => {
   const socketId = socket.id;
   socket.on("setup", async (user) => {
     socket.join(user._id);
-    users.push({ ...user, socketId });
     console.log(`user ${user.name} joined  `);
-    socket.emit("connected", users);
   });
 
   socket.on("joinRoom", (room) => {
@@ -66,19 +62,6 @@ socketio.on("connection", (socket) => {
   });
 
   socket.on("disconnect", async () => {
-    users.forEach((user) => {
-      if (user.socketId === socket.id) {
-        let Id = user._id;
-        for (const key in user) {
-          delete user[key];
-        }
-      }
-    });
-
     console.log("user disconnected");
-  });
-
-  socket.on("online users", () => {
-    socket.emit("online users", users);
   });
 });

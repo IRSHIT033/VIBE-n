@@ -1,4 +1,4 @@
-import User from "../model/User";
+import User from "../models/user_model.js";
 
 const handleLogout = async (req, res) => {
   // On client, also delete the accessToken

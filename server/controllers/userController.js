@@ -1,25 +1,26 @@
 import asyncHandler from "express-async-handler";
-
 import User from "../models/user_model.js";
-import generateToken from "../config/generateToken.js";
 
-export const registerUser = asyncHandler(async (req, res) => {
+export const handleRegisterUser = asyncHandler(async (req, res) => {
   const { name, email, password, pic } = req.body;
   if (!name || !email || !password) {
     res.status(400);
     throw new Error("Please Enter All Fields");
   }
   const userExists = await User.findOne({ email });
+
   if (userExists) {
     res.status(400);
     throw new Error("User already exists");
   }
+
   const user = await User.create({
     name,
     email,
     password,
     pic,
   });
+  //console.log(user);
   if (user) {
     res.status(201).json({
       _id: user._id,
@@ -27,7 +28,6 @@ export const registerUser = asyncHandler(async (req, res) => {
       email: user.email,
       isAdmin: user.isAdmin,
       pic: user.pic,
-      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -45,12 +45,12 @@ export const authUser = asyncHandler(async (req, res) => {
       email: user.email,
       pic: user.pic,
       isAdmin: user.isAdmin,
-      token: generateToken(user._id),
     });
   }
 });
 
 export const allUser = asyncHandler(async (req, res) => {
+  // this query  will return all users matching name or email
   const key = req.query.search
     ? {
         $or: [
