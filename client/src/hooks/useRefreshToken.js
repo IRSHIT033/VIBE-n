@@ -4,7 +4,7 @@ import { ChatState } from "../Context/ChatProvider";
 const useRefreshToken = () => {
   const { setAuth } = ChatState();
   const refresh = async () => {
-    const response = await axios.get("/refresh", {
+    const response = await axios.get("/api/user/refresh", {
       withCredentials: true,
     });
     setAuth((prev) => {
