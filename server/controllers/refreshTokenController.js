@@ -9,7 +9,6 @@ const handleRefreshToken = async (req, res) => {
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
 
   const foundUser = await User.findOne({ refreshToken }).exec();
-
   //Detected refresh token reuse!
   if (!foundUser) {
     jwt.verify(
@@ -19,13 +18,12 @@ const handleRefreshToken = async (req, res) => {
         if (err) return res.sendStatus(403); //Forbidden
 
         const hackedUser = await User.findOne({
-          username: decoded.username,
+          email: decoded.email,
         }).exec();
 
         //clearing all the refresh token
         hackedUser.refreshToken = [];
         const result = await hackedUser.save();
-        console.log(result);
       }
     );
 
@@ -43,18 +41,17 @@ const handleRefreshToken = async (req, res) => {
     process.env.REFRESH_TOKEN_SECRET,
     async (err, decoded) => {
       if (err) {
-        foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
+        foundUser.refreshToken = [...newRefreshTokenArray];
         const result = await foundUser.save();
       }
-      if (err || foundUser.username !== decoded.username)
-        return res.sendStatus(403);
+      if (err || foundUser.email !== decoded.email) return res.sendStatus(403);
 
       // Refresh token was still valid
 
       const accessToken = jwt.sign(
         {
           UserInfo: {
-            username: decoded.username,
+            email: decoded.email,
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -62,7 +59,7 @@ const handleRefreshToken = async (req, res) => {
       );
 
       const newRefreshToken = jwt.sign(
-        { username: foundUser.username },
+        { email: foundUser.email },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "1d" }
       );

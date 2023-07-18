@@ -2,15 +2,27 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import colors from "colors";
+import cors from "cors";
 import router from "./routes/userRoutes.js";
 import chatRouter from "./routes/chatRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import { not_found, error_handler } from "./middleware/errorMiddleware.js";
+import cookieParser from "cookie-parser";
+
 dotenv.config();
 
 connectDB();
 const app = express();
 app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.ORIGIN,
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
+app.use(cookieParser());
+
 const port = 5000 || process.env.PORT;
 
 app.use("/api/user", router);

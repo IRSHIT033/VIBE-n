@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/toast";
 import { useState } from "react";
 import { Button } from "@chakra-ui/button";
-import axios from "axios";
+import axios from "../../api/axios";
+import { ChatState } from "../../Context/ChatProvider";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -13,9 +14,13 @@ const Login = () => {
   const [email, setEmail] = useState();
   const [password, setpassword] = useState();
   const [loading, setLoading] = useState(false);
+  const { setAuth } = ChatState();
+
   const handleClick = () => setShow(!show);
   const toast = useToast();
   const navigate = useNavigate();
+
+  console.log(import.meta.env.BASE_URL);
 
   const submitHandel = async () => {
     setLoading(true);
@@ -37,6 +42,7 @@ const Login = () => {
         headers: {
           "Content-type": "application/json",
         },
+        withCredentials: true,
       };
       const { data } = await axios.post(
         "/api/user/login",
@@ -46,7 +52,7 @@ const Login = () => {
         },
         config
       );
-      console.log(data);
+
       toast({
         title: "Login Successful",
         status: "success",
@@ -54,14 +60,14 @@ const Login = () => {
         isClosable: true,
         position: "bottom",
       });
-      localStorage.setItem("Info", JSON.stringify(data));
-
+      const { accessToken } = data;
+      setAuth({ accessToken, email });
       setLoading(false);
-      navigate("/chats");
+      navigate("/chats", { replace: true });
     } catch (error) {
       toast({
         title: "Error Occured!",
-        description: error.response.data.message,
+        description: error.response?.data?.message,
         status: "error",
         duration: 5000,
         isClosable: true,

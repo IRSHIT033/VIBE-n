@@ -5,11 +5,11 @@ import SlideBar from "../miscellaneous/SlideBar";
 import Chats from "../miscellaneous/Chats";
 import ChatBox from "../miscellaneous/ChatBox";
 const ChatPage = () => {
-  const { user } = ChatState();
+  const { auth } = ChatState();
   const [fetch, setfetch] = useState(false);
   return (
     <div style={{ width: "100%" }}>
-      {user && <SlideBar />}
+      {auth && <SlideBar />}
       <Box
         d="flex"
         justifyContent={"space-between"}
@@ -17,8 +17,8 @@ const ChatPage = () => {
         h="91.5vh"
         p="10px"
       >
-        {user && <Chats fetch={fetch} />}
-        {user && <ChatBox fetch={fetch} setfetch={setfetch} />}
+        {auth && <Chats fetch={fetch} />}
+        {auth && <ChatBox fetch={fetch} setfetch={setfetch} />}
       </Box>
     </div>
   );

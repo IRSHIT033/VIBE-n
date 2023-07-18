@@ -23,11 +23,7 @@ export const handleRegisterUser = asyncHandler(async (req, res) => {
   //console.log(user);
   if (user) {
     res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      pic: user.pic,
+      message: " User created successFully ",
     });
   } else {
     res.status(400);
@@ -40,7 +36,6 @@ export const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
   if (user && (await user.matchPassword(password))) {
     res.json({
-      _id: user._id,
       name: user.name,
       email: user.email,
       pic: user.pic,

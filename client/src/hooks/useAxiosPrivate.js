@@ -4,10 +4,10 @@ import { ChatState } from "../Context/ChatProvider";
 import { axiosPrivate } from "../api/axios";
 
 const useAxiosPrivate = () => {
-  // call
   const refresh = useRefreshToken();
 
   const { auth } = ChatState();
+  console.log(auth);
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -28,7 +28,9 @@ const useAxiosPrivate = () => {
         const prevRequest = error?.config;
         if (error?.response.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true;
+          // setting up the httpOnly cookie
           const newAccessToken = await refresh();
+          console.log(newAccessToken);
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevRequest);
         }

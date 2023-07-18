@@ -41,17 +41,16 @@ function SlideBar() {
   const [loadingChat, setLoadingChat] = useState(false);
   const toast = useToast();
   const {
-    user,
+    auth,
     setSelectedChat,
     chats,
     setchats,
     notification,
     setNotification,
   } = ChatState();
-  const history = useNavigate();
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const logoutHandler = () => {
-    localStorage.removeItem("Info");
     navigate("/");
   };
 
