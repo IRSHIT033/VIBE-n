@@ -9,7 +9,7 @@ const UserList = ({ user, handlefunc }) => {
       bg="#e8e8e8"
       _hover={{ background: "#fcd12a", color: "white" }}
       w="100%"
-      d="flex"
+      display="flex"
       alignItems={"center"}
       color={"black"}
       px={3}

@@ -15,13 +15,16 @@ import { getSender, getSenderObject } from "../../config/ChatAbout";
 import ProfileModal from "../../miscellaneous/ProfileModel";
 import UpDateGroup from "../../miscellaneous/UpDateGroup";
 import ScrollableBox from "../../User/ScrollableBox";
-import axios from "axios";
+
 import io from "socket.io-client";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const EndPoint = "http://localhost:5000";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetch, setfetch }) => {
+  const axiosPrivateFetchMsg = useAxiosPrivate();
+  const axiosPrivateSendMsg = useAxiosPrivate();
   const [msg, setMsg] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMsg, setNewMsg] = useState("");
@@ -29,7 +32,7 @@ const SingleChat = ({ fetch, setfetch }) => {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [online, setonline] = useState(false);
-  const { user, selectedChat, setSelectedChat, notification, setNotification } =
+  const { auth, selectedChat, setSelectedChat, notification, setNotification } =
     ChatState();
 
   const toast = useToast();
@@ -37,15 +40,9 @@ const SingleChat = ({ fetch, setfetch }) => {
   const fetchMsg = async () => {
     if (!selectedChat) return;
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
       setLoading(true);
-      const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
-        config
+      const { data } = await axiosPrivateFetchMsg.get(
+        `/api/message/${selectedChat._id}`
       );
       setLoading(false);
       setMsg(data);
@@ -65,21 +62,11 @@ const SingleChat = ({ fetch, setfetch }) => {
     if (e.key === "Enter" && newMsg) {
       socket.emit("typing stopped", selectedChat._id);
       try {
-        const config = {
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
         setNewMsg("");
-        const { data } = await axios.post(
-          "/api/message",
-          {
-            content: newMsg,
-            chatId: selectedChat._id,
-          },
-          config
-        );
+        const { data } = await axiosPrivateSendMsg.post("/api/message", {
+          content: newMsg,
+          chatId: selectedChat._id,
+        });
         socket.emit("newMsg", data);
         setMsg([...msg, data]);
       } catch (err) {
@@ -100,7 +87,7 @@ const SingleChat = ({ fetch, setfetch }) => {
 
   useEffect(() => {
     socket = io(EndPoint);
-    socket.emit("setup", user);
+    socket.emit("setup", auth);
 
     socket.on("connected", (users) => {
       setSocketconnection(true);
@@ -152,22 +139,22 @@ const SingleChat = ({ fetch, setfetch }) => {
             fontSize={{ base: "28px", md: "30px" }}
             pb={3}
             px={2}
-            w="100%"
+            width="100%"
             fontFamily={"Work sans"}
-            d="flex"
+            display="flex"
             justifyContent={{ base: "space-between" }}
             alignItems="center"
           >
             <IconButton
-              d={{ base: "flex", md: "none" }}
+              display={{ base: "flex", md: "none" }}
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
             />
             {!selectedChat.isGroupChat ? (
               <>
-                {getSender(user, selectedChat.users)}
+                {getSender(auth, selectedChat.users)}
                 <ProfileModal
-                  user={getSenderObject(user, selectedChat.users)}
+                  auth={getSenderObject(auth, selectedChat.users)}
                 />
               </>
             ) : (
@@ -182,15 +169,15 @@ const SingleChat = ({ fetch, setfetch }) => {
             )}
           </Text>
           <Box
-            d={"flex"}
+            display={"flex"}
             flexDir={"column"}
             justifyContent={"flex-end"}
             p={3}
             bg={"#e8e8e8"}
-            w="100%"
-            h="100%"
             borderRadius={"lg"}
-            overflowY={"hidden"}
+            width={"100%"}
+            height={"100%"}
+            overflowY={"clip"}
           >
             {loading ? (
               <Spinner
@@ -201,9 +188,7 @@ const SingleChat = ({ fetch, setfetch }) => {
                 margin={"auto"}
               />
             ) : (
-              <div className="messages">
-                <ScrollableBox msg={msg} />
-              </div>
+              <ScrollableBox msg={msg} />
             )}
             <FormControl onKeyDown={sendMsg} isRequired mt={3}>
               {isTyping ? <div m={2}>Typing...</div> : <></>}
@@ -218,7 +203,12 @@ const SingleChat = ({ fetch, setfetch }) => {
           </Box>
         </>
       ) : (
-        <Box d={"flex"} alignItems="center" justifyContent={"center"} h="100%">
+        <Box
+          display={"flex"}
+          alignItems="center"
+          justifyContent={"center"}
+          height="100%"
+        >
           <Text fontSize={"3xl"} pb={3} fontFamily={"Work Sans"}>
             Click on a user to start chat
           </Text>

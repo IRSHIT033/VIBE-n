@@ -5,8 +5,6 @@ import asyncHandler from "express-async-handler";
 
 const handleLogin = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
-
-  console.log(`cookie available at login: ${JSON.stringify(cookies)}`);
   const { email, password } = req.body;
   if (!email || !password)
     return res
@@ -26,12 +24,12 @@ const handleLogin = asyncHandler(async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: process.env.ACCESS_TOKEN_EXPIRY_TIME }
+      { expiresIn: "10s" }
     );
     const newRefreshToken = jwt.sign(
       { email: foundUser.email },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: process.env.REFRESH_TOKEN_EXPIRY_TIME }
+      { expiresIn: "1d" }
     );
     // Saving refreshToken with current user
     const newRefreshTokenArray = !cookies?.jwt
@@ -48,8 +46,7 @@ const handleLogin = asyncHandler(async (req, res) => {
 
     foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
 
-    const result = await foundUser.save();
-    console.log(result);
+    const loggedInUser = await foundUser.save();
 
     // Creates Secure Cookie with refresh token
     res.cookie("jwt", newRefreshToken, {
@@ -60,7 +57,13 @@ const handleLogin = asyncHandler(async (req, res) => {
     });
 
     // Send access token to user
-    res.json({ accessToken });
+    res.json({
+      accessToken: accessToken,
+      _id: foundUser._id,
+      name: foundUser.name,
+      email: foundUser.email,
+      pic: foundUser.pic,
+    });
   } else {
     res.sendStatus(401);
   }

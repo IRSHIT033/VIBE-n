@@ -1,44 +1,55 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Box, Button, Stack, useToast, Text } from "@chakra-ui/react";
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { ChatState } from "../Context/ChatProvider";
 import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatAbout";
 import GroupChat from "./GroupChat";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
 
 const Chats = ({ fetch }) => {
   const [loggedUser, setloggedUser] = useState();
-  const { user, selectedChat, setSelectedChat, chats, setchats } = ChatState();
+  const { auth, selectedChat, setSelectedChat, chats, setchats } = ChatState();
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
   const toast = useToast();
-  const fetch_Chats = async () => {
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.get("/api/chat", config);
-      setchats(data);
-    } catch (err) {
-      toast({
-        title: "Error Occured!",
-        description: "Failed to Load the chats",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-left",
-      });
-    }
-  };
 
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const fetchChats = async () => {
+      try {
+        const { data } = await axiosPrivate.get("/api/chat", {
+          signal: controller.signal,
+        });
+        isMounted && setchats(data);
+      } catch (err) {
+        console.error(err);
+        toast({
+          title: "Error Occured!",
+          description: "Failed to Load the chats",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-left",
+        });
+      }
+    };
     setloggedUser(JSON.parse(localStorage.getItem("Info")));
-    fetch_Chats();
+    fetchChats();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, [fetch]);
+
   return (
     <Box
-      d={{ base: selectedChat ? "none" : "flex", md: "flex" }}
+      display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDir="column"
       alignItems={"center"}
       p={3}
@@ -52,15 +63,15 @@ const Chats = ({ fetch }) => {
         px={3}
         fontSize={{ base: "28px", md: "20px" }}
         fontFamily={"Work sans"}
-        d="flex"
-        w="100%"
+        display="flex"
+        width="100%"
         justifyContent={"space-between"}
         alignItems={"center"}
       >
         Chats
         <GroupChat>
           <Button
-            d="flex"
+            display="flex"
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
             rightIcon={<AddIcon />}
           >
@@ -69,12 +80,12 @@ const Chats = ({ fetch }) => {
         </GroupChat>
       </Box>
       <Box
-        d="flex"
+        display="flex"
         flexDir="column"
         p={3}
         bg="#f8f8f8"
-        w="100%"
-        h="100%"
+        width="100%"
+        height="100%"
         borderRadius={"lg"}
         overflowY={"hidden"}
       >
@@ -101,7 +112,7 @@ const Chats = ({ fetch }) => {
                 {chat.latestMessage && (
                   <Text fontSize="xs">
                     <b>
-                      {chat.latestMessage.sender.name === user.name
+                      {chat.latestMessage.sender.name === auth?.name
                         ? "Me"
                         : chat.latestMessage.sender.name}{" "}
                       :{" "}

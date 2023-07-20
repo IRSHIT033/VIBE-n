@@ -5,14 +5,11 @@ import { axiosPrivate } from "../api/axios";
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
-
   const { auth } = ChatState();
-  console.log(auth);
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
-        // when first time  user loggedIN and tried send a request
         if (!config.headers["Authorization"]) {
           config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
         }
@@ -24,17 +21,14 @@ const useAxiosPrivate = () => {
     const responseIntercept = axiosPrivate.interceptors.response.use(
       (response) => response,
       async (error) => {
-        // after getting the forbidden error reusing the
         const prevRequest = error?.config;
-        if (error?.response.status === 403 && !prevRequest?.sent) {
+        if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
-          // setting up the httpOnly cookie
           const newAccessToken = await refresh();
-          console.log(newAccessToken);
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          console.log("hello");
           return axiosPrivate(prevRequest);
         }
-
         return Promise.reject(error);
       }
     );

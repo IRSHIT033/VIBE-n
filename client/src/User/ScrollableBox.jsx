@@ -11,13 +11,13 @@ import "../App.css";
 import { ChatState } from "../Context/ChatProvider";
 
 const ScrollableBox = ({ msg }) => {
-  const { user } = ChatState();
+  const { auth } = ChatState();
   return (
-    <Stack overflowY={"auto"}>
+    <Stack overflowY={"scroll"}>
       {msg &&
         msg.map((m, i) => (
           <div style={{ display: "flex" }} key={m._id}>
-            {(isSender(msg, m, i, user._id) || isLastMsg(msg, i, user._id)) && (
+            {(isSender(msg, m, i, auth._id) || isLastMsg(msg, i, auth._id)) && (
               <Tooltip label={m.sender.name} placement="bottom-start" hasArrow>
                 <Avatar
                   mt="7px"
@@ -31,13 +31,13 @@ const ScrollableBox = ({ msg }) => {
             <span
               style={{
                 backgroundColor: `${
-                  m.sender._id === user._id ? "#f5f5f5" : "#fcd12a"
+                  m.sender._id === auth._id ? "#f5f5f5" : "#fcd12a"
                 }`,
                 borderRadius: "20px",
                 padding: "5px 15px",
                 maxWidth: "75%",
-                marginLeft: isSameSenderMargin(msg, m, i, user._id),
-                marginTop: isSameUser(msg, m, i, user._id) ? 3 : 10,
+                marginLeft: isSameSenderMargin(msg, m, i, auth._id),
+                marginTop: isSameUser(msg, m, i, auth._id) ? 3 : 10,
               }}
             >
               {m.content}

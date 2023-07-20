@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, useToast } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
 import SlideBar from "../miscellaneous/SlideBar";
 import Chats from "../miscellaneous/Chats";
@@ -7,14 +7,15 @@ import ChatBox from "../miscellaneous/ChatBox";
 const ChatPage = () => {
   const { auth } = ChatState();
   const [fetch, setfetch] = useState(false);
+
   return (
     <div style={{ width: "100%" }}>
       {auth && <SlideBar />}
       <Box
-        d="flex"
+        display="flex"
         justifyContent={"space-between"}
-        w="100%"
-        h="91.5vh"
+        w="100vw"
+        h="90vh"
         p="10px"
       >
         {auth && <Chats fetch={fetch} />}

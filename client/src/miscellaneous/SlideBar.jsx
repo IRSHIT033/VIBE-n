@@ -26,13 +26,13 @@ import { Tooltip } from "@chakra-ui/tooltip";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import ProfileModel from "./ProfileModel";
 import { ChatState } from "../Context/ChatProvider";
 import { Button } from "@chakra-ui/react";
 import { getSender } from "../config/ChatAbout";
 import { Effect } from "react-notification-badge";
 import NotificationBadge from "react-notification-badge";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 function SlideBar() {
   const [search, setSearch] = useState("");
@@ -48,6 +48,7 @@ function SlideBar() {
     notification,
     setNotification,
   } = ChatState();
+  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const logoutHandler = () => {
@@ -68,12 +69,8 @@ function SlideBar() {
     }
     try {
       setloading(true);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+
+      const { data } = await axiosPrivate.get(`/api/user?search=${search}`);
       setloading(false);
       setsearchResult(data);
     } catch (err) {
@@ -91,13 +88,8 @@ function SlideBar() {
   const access_Chat = async (userId) => {
     try {
       setLoadingChat(true);
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
+
+      const { data } = await axiosPrivate.post(`/api/chat`, { userId });
 
       if (!chats.find((c) => c._id === data._id)) setchats([data, ...chats]);
 
@@ -119,7 +111,7 @@ function SlideBar() {
   return (
     <>
       <Box
-        d="flex"
+        display="flex"
         justifyContent="space-between"
         alignItems="center"
         bg="white"
@@ -144,54 +136,52 @@ function SlideBar() {
           VIBE'N
         </Text>
 
-        <div>
-          <Menu>
-            <MenuButton p={1}>
-              <Box px={5}>
-                <NotificationBadge
-                  count={notification.length}
-                  effect={Effect.SCALE}
-                />
-                <BellIcon fontSize={"2xl"} m={1} />
-              </Box>
-            </MenuButton>
-            <MenuList>
-              <Box p="5px 10px 5px 10px">
-                {!notification.length && "No new Messages"}
-                {notification.map((n) => (
-                  <MenuItem
-                    key={n._id}
-                    onClick={() => {
-                      setSelectedChat(n.chat);
-                      setNotification(notification.filter((i) => i !== n));
-                    }}
-                  >
-                    {n.chat.isGroupChat
-                      ? `Got Message from ${n.chat.chatName}`
-                      : `Got Message from ${getSender(user, n.chat.users)}`}
-                  </MenuItem>
-                ))}
-              </Box>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
-              <Avatar
-                size="sm"
-                cursor="pointer"
-                name={user.name}
-                src={user.pic}
+        <Menu>
+          <MenuButton p={1}>
+            <Box px={5}>
+              <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
               />
-            </MenuButton>
-            <MenuList>
-              <ProfileModel user={user}>
-                <MenuItem>My Profile</MenuItem>{" "}
-              </ProfileModel>
-              <MenuDivider />
-              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
-        </div>
+              <BellIcon fontSize={"2xl"} m={1} />
+            </Box>
+          </MenuButton>
+          <MenuList>
+            <Box p="5px 10px 5px 10px">
+              {!notification.length && "No new Messages"}
+              {notification.map((n) => (
+                <MenuItem
+                  key={n._id}
+                  onClick={() => {
+                    setSelectedChat(n.chat);
+                    setNotification(notification.filter((i) => i !== n));
+                  }}
+                >
+                  {n.chat.isGroupChat
+                    ? `Got Message from ${n.chat.chatName}`
+                    : `Got Message from ${getSender(auth, n.chat.users)}`}
+                </MenuItem>
+              ))}
+            </Box>
+          </MenuList>
+        </Menu>
+        <Menu>
+          <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
+            <Avatar
+              size="sm"
+              cursor="pointer"
+              name={auth?.name}
+              src={auth?.pic}
+            />
+          </MenuButton>
+          <MenuList>
+            <ProfileModel auth={auth}>
+              <MenuItem>My Profile</MenuItem>{" "}
+            </ProfileModel>
+            <MenuDivider />
+            <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+          </MenuList>
+        </Menu>
       </Box>
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
@@ -199,7 +189,7 @@ function SlideBar() {
           <DrawerHeader borderBottomWidth="1px">Search users</DrawerHeader>
 
           <DrawerBody>
-            <Box d="flex" pb={2}>
+            <Box display="flex" pb={2}>
               <Input
                 placeholder="search by name or emailId"
                 mr={2}
@@ -221,7 +211,7 @@ function SlideBar() {
                 />
               ))
             )}
-            {loadingChat && <Spinner ml="auto" d="flex" />}
+            {loadingChat && <Spinner ml="auto" display="flex" />}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

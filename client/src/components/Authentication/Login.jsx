@@ -20,8 +20,6 @@ const Login = () => {
   const toast = useToast();
   const navigate = useNavigate();
 
-  console.log(import.meta.env.BASE_URL);
-
   const submitHandel = async () => {
     setLoading(true);
     if (!email || !password) {
@@ -60,8 +58,17 @@ const Login = () => {
         isClosable: true,
         position: "bottom",
       });
-      const { accessToken } = data;
-      setAuth({ accessToken, email });
+
+      localStorage.setItem(
+        "Info",
+        JSON.stringify({
+          name: data?.name,
+          _id: data?._id,
+          email: data?._id,
+          pic: data?.pic,
+        })
+      );
+      setAuth(data);
       setLoading(false);
       navigate("/chats", { replace: true });
     } catch (error) {

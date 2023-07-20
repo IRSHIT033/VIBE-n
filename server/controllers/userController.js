@@ -31,21 +31,14 @@ export const handleRegisterUser = asyncHandler(async (req, res) => {
   }
 });
 
-export const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      name: user.name,
-      email: user.email,
-      pic: user.pic,
-      isAdmin: user.isAdmin,
-    });
-  }
+export const getCurrentUser = asyncHandler(async (req, res) => {
+  console.log(req.user);
+  res.json(req.user);
 });
 
 export const allUser = asyncHandler(async (req, res) => {
   // this query  will return all users matching name or email
+  console.log(req.query.search);
   const key = req.query.search
     ? {
         $or: [

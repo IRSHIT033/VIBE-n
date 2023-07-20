@@ -10,10 +10,15 @@ export const Auth = asyncHandler(async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id).select("-password");
+
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      req.user = await User.findOne({ email: decoded.UserInfo.email }).select(
+        "-password"
+      );
+      console.log("this is the user", req.user);
       next();
     } catch (err) {
+      console.log(err);
       res.status(401);
       throw new Error("Not Authorized ");
     }

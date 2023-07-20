@@ -21,6 +21,7 @@ import { ViewIcon } from "@chakra-ui/icons";
 import { ChatState } from "../Context/ChatProvider";
 import BadgeUser from "../User/BadgeUser";
 import UserList from "../User/UserList";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,15 +30,16 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
   const [loading, setLoading] = useState(false);
   const [renameloading, setRenameloading] = useState(false);
   const [searchResult, setsearchresult] = useState([]);
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { auth, selectedChat, setSelectedChat } = ChatState();
   const toast = useToast();
+  const axiosPrivate = useAxiosPrivate();
 
   const handleremove = async (deluser) => {
     setLoading(true);
     try {
       if (
-        selectedChat.groupAdmin._id !== user._id &&
-        deluser._id !== user._id
+        selectedChat.groupAdmin._id !== auth._id &&
+        deluser._id !== auth._id
       ) {
         toast({
           title: "Only admins can Add or Remove Someone",
@@ -50,13 +52,11 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
         setLoading(false);
         return;
       }
-      const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const { data } = await axios.put(
-        `/api/chat/removeFromgroup`,
-        { chatId: selectedChat._id, userId: deluser._id },
-        config
-      );
-      deluser._id === user._id ? setSelectedChat() : setSelectedChat(data);
+      const { data } = await axiosPrivate.put(`/api/chat/removeFromgroup`, {
+        chatId: selectedChat._id,
+        userId: deluser._id,
+      });
+      deluser._id === auth._id ? setSelectedChat() : setSelectedChat(data);
       setfetch(!fetch);
       fetchMsg();
       setLoading(false);
@@ -88,7 +88,7 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
         setLoading(false);
         return;
       }
-      if (selectedChat.groupAdmin._id !== user._id) {
+      if (selectedChat.groupAdmin._id !== auth._id) {
         toast({
           title: "Only admins can Add or Remove Someone",
           description: "Failed to Load the Search Results",
@@ -100,12 +100,11 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
         setLoading(false);
         return;
       }
-      const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const { data } = await axios.put(
-        `/api/chat/AddTogroup`,
-        { chatId: selectedChat._id, userId: adduser._id },
-        config
-      );
+      const config = { headers: { Authorization: `Bearer ${auth.token}` } };
+      const { data } = await axiosPrivate.put(`/api/chat/AddTogroup`, {
+        chatId: selectedChat._id,
+        userId: adduser._id,
+      });
       setSelectedChat(data);
       setfetch(!fetch);
       setLoading(false);
@@ -126,15 +125,10 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
     if (!groupName) return;
     try {
       setRenameloading(true);
-      const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      const { data } = await axios.put(
-        "/api/chat/rename",
-        {
-          chatId: selectedChat._id,
-          chatName: groupName,
-        },
-        config
-      );
+      const { data } = await axiosPrivate.put("/api/chat/rename", {
+        chatId: selectedChat._id,
+        chatName: groupName,
+      });
       console.log(data);
       setSelectedChat(data);
       setfetch(!fetch);
@@ -161,10 +155,8 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
     }
     try {
       setLoading(true);
-      const config = {
-        headers: { Authorization: `Bearer ${user.token}` },
-      };
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+
+      const { data } = await axiosPrivate.get(`/api/user?search=${search}`);
       setLoading(false);
       setsearchresult(data);
     } catch (err) {
@@ -194,14 +186,14 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
           <ModalHeader
             fontSize={"1.7rem"}
             fontFamily={"Work sans"}
-            d="flex"
+            display="flex"
             justifyContent={"center"}
           >
             {selectedChat.chatName}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Box w="100%" d="flex" flexWrap={"wrap"}>
+            <Box w="100%" display="flex" flexWrap={"wrap"}>
               {selectedChat.users.map((u) => (
                 <BadgeUser
                   key={u._id}
@@ -210,7 +202,7 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
                 />
               ))}
             </Box>
-            <FormControl d="flex">
+            <FormControl display="flex">
               <Input
                 placeholder="Chat Name"
                 mb={3}

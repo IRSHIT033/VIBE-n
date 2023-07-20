@@ -18,6 +18,7 @@ import { ChatState } from "../Context/ChatProvider";
 import BadgeUser from "../User/BadgeUser";
 import axios from "axios";
 import UserList from "../User/UserList";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const GroupChat = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,7 +28,8 @@ const GroupChat = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [searchresult, setSearchresult] = useState([]);
   const toast = useToast();
-  const { user, chats, setchats } = ChatState();
+  const { auth, chats, setchats } = ChatState();
+  const axiosPrivate = useAxiosPrivate();
 
   const handleSearch = async (query) => {
     setSearch(query);
@@ -36,10 +38,8 @@ const GroupChat = ({ children }) => {
     }
     try {
       setLoading(true);
-      const config = {
-        headers: { Authorization: `Bearer ${user.token}` },
-      };
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+
+      const { data } = await axiosPrivate.get(`/api/user?search=${search}`);
       setLoading(false);
       setSearchresult(data);
     } catch (err) {
@@ -68,19 +68,10 @@ const GroupChat = ({ children }) => {
     }
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      const { data } = await axios.post(
-        "/api/chat/group",
-        {
-          name: groupChatName,
-          users: JSON.stringify(selectedUsers.map((u) => u._id)),
-        },
-        config
-      );
+      const { data } = await axiosPrivate.post("/api/chat/group", {
+        name: groupChatName,
+        users: JSON.stringify(selectedUsers.map((u) => u._id)),
+      });
       setchats([data, ...chats]);
       onClose();
       toast({
@@ -137,7 +128,7 @@ const GroupChat = ({ children }) => {
             Create group Chat
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody d="flex" flexDir={"column"} alignItems={"center"}>
+          <ModalBody display="flex" flexDir={"column"} alignItems={"center"}>
             <FormControl>
               <Input
                 placeholder="Group Name"
@@ -152,7 +143,7 @@ const GroupChat = ({ children }) => {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
-            <Box w="100%" d="flex" flexWrap="wrap">
+            <Box w="100%" display="flex" flexWrap="wrap">
               {selectedUsers.map((u) => (
                 <BadgeUser
                   key={u._id}
