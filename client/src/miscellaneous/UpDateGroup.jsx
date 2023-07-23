@@ -129,7 +129,6 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
         chatId: selectedChat._id,
         chatName: groupName,
       });
-      console.log(data);
       setSelectedChat(data);
       setfetch(!fetch);
       setRenameloading(false);
@@ -142,7 +141,6 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
         isClosable: true,
         position: "top",
       });
-      console.log(err);
       setRenameloading(false);
     }
     setgroupName("");
@@ -185,7 +183,6 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
         <ModalContent>
           <ModalHeader
             fontSize={"1.7rem"}
-            fontFamily={"Work sans"}
             display="flex"
             justifyContent={"center"}
           >

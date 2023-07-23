@@ -34,7 +34,6 @@ const Login = () => {
       return;
     }
 
-    console.log(email, password);
     try {
       const config = {
         headers: {
@@ -64,13 +63,13 @@ const Login = () => {
         JSON.stringify({
           name: data?.name,
           _id: data?._id,
-          email: data?._id,
+          email: data?.email,
           pic: data?.pic,
         })
       );
       setAuth(data);
       setLoading(false);
-      navigate("/chats", { replace: true });
+      navigate("/chats");
     } catch (error) {
       toast({
         title: "Error Occured!",

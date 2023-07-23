@@ -27,12 +27,7 @@ const ProfileModal = ({ auth, children }) => {
       <Modal size="lg" onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent h="410px">
-          <ModalHeader
-            fontSize="40px"
-            fontFamily="Work sans"
-            display="flex"
-            justifyContent="center"
-          >
+          <ModalHeader fontSize="40px" display="flex" justifyContent="center">
             {auth.name}
           </ModalHeader>
           <ModalCloseButton />
@@ -48,10 +43,7 @@ const ProfileModal = ({ auth, children }) => {
               src={auth?.pic}
               alt={auth?.name}
             />
-            <Text
-              fontSize={{ base: "28px", md: "30px" }}
-              fontFamily="Work sans"
-            >
+            <Text fontSize={{ base: "28px", md: "30px" }}>
               Email: {auth?.email}
             </Text>
           </ModalBody>

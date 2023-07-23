@@ -7,13 +7,11 @@ import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatAbout";
 import GroupChat from "./GroupChat";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { useNavigate } from "react-router-dom";
+import { socket } from "../socket/socket";
 
 const Chats = ({ fetch }) => {
-  const [loggedUser, setloggedUser] = useState();
   const { auth, selectedChat, setSelectedChat, chats, setchats } = ChatState();
   const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
   const toast = useToast();
 
   useEffect(() => {
@@ -38,7 +36,6 @@ const Chats = ({ fetch }) => {
         });
       }
     };
-    setloggedUser(JSON.parse(localStorage.getItem("Info")));
     fetchChats();
 
     return () => {
@@ -62,7 +59,6 @@ const Chats = ({ fetch }) => {
         pb={3}
         px={3}
         fontSize={{ base: "28px", md: "20px" }}
-        fontFamily={"Work sans"}
         display="flex"
         width="100%"
         justifyContent={"space-between"}
@@ -106,7 +102,7 @@ const Chats = ({ fetch }) => {
               >
                 <Text>
                   {!chat.isGroupChat
-                    ? getSender(loggedUser, chat.users)
+                    ? getSender(auth, chat.users)
                     : chat.chatName}
                 </Text>
                 {chat.latestMessage && (

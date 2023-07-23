@@ -1,4 +1,4 @@
-import { Avatar, Stack, Tooltip } from "@chakra-ui/react";
+import { Avatar, Flex, Stack, Tooltip, Box, Center } from "@chakra-ui/react";
 import React from "react";
 import ScrollableFeed from "react-scrollable-feed";
 import {
@@ -10,39 +10,86 @@ import {
 import "../App.css";
 import { ChatState } from "../Context/ChatProvider";
 
-const ScrollableBox = ({ msg }) => {
+const ScrollableBox = ({ componentRef, msg, setReplyingTo }) => {
   const { auth } = ChatState();
+  console.log(msg);
   return (
-    <Stack overflowY={"scroll"}>
+    <Stack overflowY={"scroll"} ref={componentRef}>
       {msg &&
         msg.map((m, i) => (
-          <div style={{ display: "flex" }} key={m._id}>
-            {(isSender(msg, m, i, auth._id) || isLastMsg(msg, i, auth._id)) && (
-              <Tooltip label={m.sender.name} placement="bottom-start" hasArrow>
-                <Avatar
-                  mt="7px"
-                  mr={1}
-                  size="sm"
-                  name={m.sender.name}
-                  src={m.sender.pic}
-                />
-              </Tooltip>
+          <>
+            {m?.replyingTo && (
+              <>
+                <Flex
+                  marginLeft={m.sender._id === auth._id ? "auto" : "50"}
+                  marginRight={m.sender._id === auth._id ? "10" : "auto"}
+                >
+                  <Tooltip
+                    label={m?.replyingTo?.sender.name}
+                    placement="bottom-start"
+                    hasArrow
+                  >
+                    <Avatar
+                      mt="7px"
+                      mr={1}
+                      size="sm"
+                      name={m?.replyingTo?.sender.name}
+                      src={m?.replyingTo?.sender.pic}
+                    />
+                  </Tooltip>
+                  <Box
+                    bg={
+                      m?.replyingTo.sender._id === auth._id
+                        ? "#f5f5f5"
+                        : "#fcd12a"
+                    }
+                    borderRadius="20px"
+                    padding="5px 15px"
+                  >
+                    {m?.replyingTo.content}
+                  </Box>
+                </Flex>
+              </>
             )}
-            <span
-              style={{
-                backgroundColor: `${
-                  m.sender._id === auth._id ? "#f5f5f5" : "#fcd12a"
-                }`,
-                borderRadius: "20px",
-                padding: "5px 15px",
-                maxWidth: "75%",
-                marginLeft: isSameSenderMargin(msg, m, i, auth._id),
-                marginTop: isSameUser(msg, m, i, auth._id) ? 3 : 10,
-              }}
-            >
-              {m.content}
-            </span>
-          </div>
+
+            <div style={{ display: "flex" }} key={m._id}>
+              {(isSender(msg, m, i, auth._id) ||
+                isLastMsg(msg, i, auth._id)) && (
+                <Tooltip
+                  label={m.sender.name}
+                  placement="bottom-start"
+                  hasArrow
+                >
+                  <Avatar
+                    mt="7px"
+                    mr={1}
+                    size="sm"
+                    name={m.sender.name}
+                    src={m.sender.pic}
+                  />
+                </Tooltip>
+              )}
+
+              <span
+                style={{
+                  backgroundColor: `${
+                    m.sender._id === auth._id ? "#f5f5f5" : "#fcd12a"
+                  }`,
+                  borderRadius: "20px",
+                  padding: "5px 15px",
+                  cursor: "pointer",
+                  maxWidth: "75%",
+                  marginLeft: isSameSenderMargin(msg, m, i, auth._id),
+                  marginTop: isSameUser(msg, m, i, auth._id) ? 3 : 10,
+                }}
+                onDoubleClick={() => {
+                  setReplyingTo(m);
+                }}
+              >
+                {m.content}
+              </span>
+            </div>
+          </>
         ))}
     </Stack>
   );

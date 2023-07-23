@@ -25,7 +25,6 @@ import ChatLoading from "./ChatLoading";
 import { Tooltip } from "@chakra-ui/tooltip";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
-import { useNavigate } from "react-router-dom";
 import ProfileModel from "./ProfileModel";
 import { ChatState } from "../Context/ChatProvider";
 import { Button } from "@chakra-ui/react";
@@ -33,6 +32,7 @@ import { getSender } from "../config/ChatAbout";
 import { Effect } from "react-notification-badge";
 import NotificationBadge from "react-notification-badge";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useLogout from "../hooks/useLogout";
 
 function SlideBar() {
   const [search, setSearch] = useState("");
@@ -49,10 +49,13 @@ function SlideBar() {
     setNotification,
   } = ChatState();
   const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const logout = useLogout();
+
   const logoutHandler = () => {
-    navigate("/");
+    logout();
   };
 
   const handleSearch = async () => {
@@ -122,66 +125,62 @@ function SlideBar() {
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
             <FontAwesomeIcon id="sms-icon" icon={faSearch}></FontAwesomeIcon>
-            <Text d={{ base: "none", md: "flex" }} px={4}>
+            <Text display={{ base: "none", md: "flex" }} px={4}>
               Search User
             </Text>
           </Button>
         </Tooltip>
-        <Text
-          fontSize="2xl"
-          fontFamily="Work sans"
-          fontWeight={"bold"}
-          color={"#fcd12a"}
-        >
+        <Text fontSize="2xl" fontWeight={"bold"} color={"#fcd12a"}>
           VIBE'N
         </Text>
-
-        <Menu>
-          <MenuButton p={1}>
-            <Box px={5}>
-              <NotificationBadge
-                count={notification.length}
-                effect={Effect.SCALE}
+        <Box>
+          <Menu>
+            <MenuButton p={1}>
+              <Box px={{ base: "1px", md: "5px" }}>
+                <NotificationBadge
+                  count={notification.length}
+                  effect={Effect.SCALE}
+                />
+                <BellIcon fontSize={"2xl"} m={1} />
+              </Box>
+            </MenuButton>
+            <MenuList>
+              <Box p="5px 10px 5px 10px">
+                {!notification.length && "No new Messages"}
+                {notification.map((n) => (
+                  <MenuItem
+                    key={n._id}
+                    onClick={() => {
+                      setSelectedChat(n.chat);
+                      setNotification(notification.filter((i) => i !== n));
+                    }}
+                  >
+                    {n.chat.isGroupChat
+                      ? `Got Message from ${n.chat.chatName}`
+                      : `Got Message from ${getSender(auth, n.chat.users)}`}
+                  </MenuItem>
+                ))}
+              </Box>
+            </MenuList>
+          </Menu>
+          <Menu>
+            <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
+              <Avatar
+                size="sm"
+                cursor="pointer"
+                name={auth?.name}
+                src={auth?.pic}
               />
-              <BellIcon fontSize={"2xl"} m={1} />
-            </Box>
-          </MenuButton>
-          <MenuList>
-            <Box p="5px 10px 5px 10px">
-              {!notification.length && "No new Messages"}
-              {notification.map((n) => (
-                <MenuItem
-                  key={n._id}
-                  onClick={() => {
-                    setSelectedChat(n.chat);
-                    setNotification(notification.filter((i) => i !== n));
-                  }}
-                >
-                  {n.chat.isGroupChat
-                    ? `Got Message from ${n.chat.chatName}`
-                    : `Got Message from ${getSender(auth, n.chat.users)}`}
-                </MenuItem>
-              ))}
-            </Box>
-          </MenuList>
-        </Menu>
-        <Menu>
-          <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
-            <Avatar
-              size="sm"
-              cursor="pointer"
-              name={auth?.name}
-              src={auth?.pic}
-            />
-          </MenuButton>
-          <MenuList>
-            <ProfileModel auth={auth}>
-              <MenuItem>My Profile</MenuItem>{" "}
-            </ProfileModel>
-            <MenuDivider />
-            <MenuItem onClick={logoutHandler}>Logout</MenuItem>
-          </MenuList>
-        </Menu>
+            </MenuButton>
+            <MenuList>
+              <ProfileModel auth={auth}>
+                <MenuItem>My Profile</MenuItem>{" "}
+              </ProfileModel>
+              <MenuDivider />
+              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
+        </Box>
       </Box>
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />

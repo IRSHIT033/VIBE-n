@@ -1,15 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-import useAuth from "./useAuth";
+import { ChatState } from "../Context/ChatProvider";
 
 const useLogout = () => {
-  const { setAuth } = useAuth();
-
+  const { setAuth } = ChatState();
+  const navigate = useNavigate();
   const logout = async () => {
     setAuth({});
     try {
-      const response = await axios("/logout", {
+      await axios("/api/user/logout", {
         withCredentials: true,
       });
+      localStorage.removeItem("Info");
+      navigate("/");
     } catch (err) {
       console.error(err);
     }

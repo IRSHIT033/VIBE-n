@@ -5,7 +5,6 @@ import User from "../models/user_model.js";
 export const accessChat = asyncHandler(async (req, res) => {
   const { userId } = req.body;
   if (!userId) {
-    console.log("user id param not sent with req");
     return res.sendStatus(400);
   }
   var chat_exist = await Chat.find({

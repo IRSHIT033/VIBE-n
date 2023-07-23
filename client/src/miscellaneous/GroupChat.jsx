@@ -16,7 +16,6 @@ import {
 import { useDisclosure } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
 import BadgeUser from "../User/BadgeUser";
-import axios from "axios";
 import UserList from "../User/UserList";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
@@ -119,12 +118,7 @@ const GroupChat = ({ children }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader
-            fontSize={"35px"}
-            fontFamily={"Work Sans"}
-            d={"flex"}
-            justifyContent={"center"}
-          >
+          <ModalHeader fontSize={"35px"} d={"flex"} justifyContent={"center"}>
             Create group Chat
           </ModalHeader>
           <ModalCloseButton />

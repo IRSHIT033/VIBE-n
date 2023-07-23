@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSms } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 import {
   Container,
   Box,
@@ -28,15 +26,14 @@ const HomePage = () => {
         m="40px 0 15px 0"
         borderRadius="lg"
       >
-        <Text
-          fontSize="4xl"
+        <Box
+          fontSize="xl"
           textTransform="uppercase"
-          fontFamily="Work sans"
-          fontWeight="bold"
           color="rgba(255, 166, 0, 1)"
+          fontFamily={"cursive"}
         >
-          Vibe'n <FontAwesomeIcon id="sms-icon" icon={faSms}></FontAwesomeIcon>
-        </Text>
+          Vibe'n
+        </Box>
       </Box>
       <Box
         p={4}
@@ -65,14 +62,10 @@ const HomePage = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <p>
-                <Login />
-              </p>
+              <Login />
             </TabPanel>
             <TabPanel>
-              <p>
-                <Signup />
-              </p>
+              <Signup />
             </TabPanel>
           </TabPanels>
         </Tabs>

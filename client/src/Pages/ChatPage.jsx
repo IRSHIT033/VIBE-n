@@ -18,6 +18,7 @@ const ChatPage = () => {
         h="90vh"
         p="10px"
       >
+        {/*propagating refetch logic thid two component*/}
         {auth && <Chats fetch={fetch} />}
         {auth && <ChatBox fetch={fetch} setfetch={setfetch} />}
       </Box>

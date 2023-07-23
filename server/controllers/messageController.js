@@ -4,24 +4,32 @@ import Message from "../models/msg_model.js";
 import Chat from "../models/chat_model.js";
 
 export const sendMessage = asyncHandler(async (req, res) => {
-  const { content, chatId } = req.body;
+  const { content, chatId, replyingTo } = req.body;
   if (!content || !chatId) {
     console.log("INVALID DATA PASSSED INTO REQUEST ");
     return res.sendStatus(400);
   }
-  var newMessage = {
+  const newMessage = {
     sender: req.user._id,
     content: content,
     chat: chatId,
+    replyingTo: replyingTo,
   };
+
   try {
-    var message = await Message.create(newMessage);
+    let message = await Message.create(newMessage);
     message = await message.populate("sender", "name pic");
     message = await message.populate("chat");
+
+    if (replyingTo) {
+      message = await message.populate("replyingTo");
+    }
+
     message = await User.populate(message, {
       path: "chat.users",
       select: "name pic email",
     });
+
     await Chat.findByIdAndUpdate(req.body.chatId, {
       latestMessage: message,
     });
@@ -34,9 +42,16 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
 export const allMessages = async (req, res) => {
   try {
-    const message = await Message.find({ chat: req.params.chatId })
+    let message = await Message.find({ chat: req.params.chatId })
       .populate("sender", "name pic email")
-      .populate("chat");
+      .populate("chat")
+      .populate("replyingTo");
+
+    message = await User.populate(message, {
+      path: "replyingTo.sender",
+      select: "name pic email",
+    });
+
     res.json(message);
   } catch (err) {
     res.status(400);

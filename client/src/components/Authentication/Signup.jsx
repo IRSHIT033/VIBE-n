@@ -3,7 +3,7 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { VStack } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
-import axios from "axios";
+import axios from "../../api/axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -43,15 +43,15 @@ const Signup = () => {
       });
       return;
     }
-    console.log(name, email, password, pic);
     try {
       const config = {
         headers: {
           "Content-type": "application/json",
         },
+        withCredentials: true,
       };
       const { data } = await axios.post(
-        "/api/user",
+        "/api/user/create",
         {
           name,
           email,
@@ -60,7 +60,6 @@ const Signup = () => {
         },
         config
       );
-      console.log(data);
       toast({
         title: "Registration Successful",
         status: "success",
@@ -68,9 +67,8 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
-      localStorage.setItem("Info", JSON.stringify(data));
+
       setPicLoading(false);
-      navigate("/chats");
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -96,7 +94,6 @@ const Signup = () => {
       });
       return;
     }
-    console.log(pics);
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
@@ -109,11 +106,9 @@ const Signup = () => {
         .then((res) => res.json())
         .then((data) => {
           setPic(data.url.toString());
-          console.log(data.url.toString());
           setPicLoading(false);
         })
         .catch((err) => {
-          console.log(err);
           setPicLoading(false);
         });
     } else {

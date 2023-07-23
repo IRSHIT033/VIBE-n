@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import {
   Box,
@@ -10,32 +10,38 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, CloseIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import { getSender, getSenderObject } from "../../config/ChatAbout";
 import ProfileModal from "../../miscellaneous/ProfileModel";
 import UpDateGroup from "../../miscellaneous/UpDateGroup";
 import ScrollableBox from "../../User/ScrollableBox";
 
-import io from "socket.io-client";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-
-const EndPoint = "http://localhost:5000";
-var socket, selectedChatCompare;
-
+import { socket } from "../../socket/socket";
+let selectedChatCompare;
 const SingleChat = ({ fetch, setfetch }) => {
   const axiosPrivateFetchMsg = useAxiosPrivate();
   const axiosPrivateSendMsg = useAxiosPrivate();
   const [msg, setMsg] = useState([]);
+  const [replyingTo, setReplyingTo] = useState();
   const [loading, setLoading] = useState(false);
   const [newMsg, setNewMsg] = useState("");
   const [socketconnection, setSocketconnection] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [online, setonline] = useState(false);
   const { auth, selectedChat, setSelectedChat, notification, setNotification } =
     ChatState();
 
   const toast = useToast();
+  const componentRef = useRef(null);
+
+  useEffect(() => {
+    // Scroll to the end of the component
+    if (componentRef.current) {
+      const componentNode = componentRef.current;
+      componentNode.scrollTop = componentNode.scrollHeight;
+    }
+  });
 
   const fetchMsg = async () => {
     if (!selectedChat) return;
@@ -66,9 +72,11 @@ const SingleChat = ({ fetch, setfetch }) => {
         const { data } = await axiosPrivateSendMsg.post("/api/message", {
           content: newMsg,
           chatId: selectedChat._id,
+          replyingTo: replyingTo._id,
         });
         socket.emit("newMsg", data);
         setMsg([...msg, data]);
+        setReplyingTo(null);
       } catch (err) {
         toast({
           title: "Error Occured!",
@@ -80,20 +88,28 @@ const SingleChat = ({ fetch, setfetch }) => {
       }
     }
   };
+
   useEffect(() => {
     fetchMsg();
     selectedChatCompare = selectedChat;
   }, [selectedChat]); // eslint-disable-next-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    socket = io(EndPoint);
     socket.emit("setup", auth);
 
-    socket.on("connected", (users) => {
+    socket.on("connected", () => {
       setSocketconnection(true);
     });
     socket.on("typing", () => setIsTyping(true));
     socket.on("typing stopped", () => setIsTyping(false));
+    return () => {
+      //clean up
+      socket.off("connected", () => {
+        setSocketconnection(false);
+      });
+      socket.off("typing", () => setIsTyping(true));
+      socket.off("typing stopped", () => setIsTyping(false));
+    };
   }, []);
 
   useEffect(() => {
@@ -140,10 +156,10 @@ const SingleChat = ({ fetch, setfetch }) => {
             pb={3}
             px={2}
             width="100%"
-            fontFamily={"Work sans"}
             display="flex"
             justifyContent={{ base: "space-between" }}
             alignItems="center"
+            ref={componentRef}
           >
             <IconButton
               display={{ base: "flex", md: "none" }}
@@ -188,10 +204,26 @@ const SingleChat = ({ fetch, setfetch }) => {
                 margin={"auto"}
               />
             ) : (
-              <ScrollableBox msg={msg} />
+              <ScrollableBox
+                componentRef={componentRef}
+                msg={msg}
+                setReplyingTo={setReplyingTo}
+              />
             )}
             <FormControl onKeyDown={sendMsg} isRequired mt={3}>
               {isTyping ? <div m={2}>Typing...</div> : <></>}
+              {replyingTo && (
+                <Box p={3} bg="#e0e0e0">
+                  <strong>Replying to :</strong> {replyingTo?.content}
+                  <SmallCloseIcon
+                    boxSize={9}
+                    color="yellow.400"
+                    mx={2}
+                    cursor="pointer"
+                    onClick={() => setReplyingTo(null)}
+                  />
+                </Box>
+              )}
               <Input
                 variant={"filled"}
                 bg="#e0e0e0"
@@ -209,7 +241,7 @@ const SingleChat = ({ fetch, setfetch }) => {
           justifyContent={"center"}
           height="100%"
         >
-          <Text fontSize={"3xl"} pb={3} fontFamily={"Work Sans"}>
+          <Text fontSize={"3xl"} pb={3}>
             Click on a user to start chat
           </Text>
         </Box>
