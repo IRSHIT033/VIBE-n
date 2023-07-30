@@ -1,12 +1,12 @@
-import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { VStack } from "@chakra-ui/layout";
-import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@chakra-ui/toast";
-import { useState } from "react";
-import { Button } from "@chakra-ui/button";
-import axios from "../../api/axios";
-import { ChatState } from "../../Context/ChatProvider";
+import { FormControl, FormLabel } from '@chakra-ui/form-control';
+import { VStack } from '@chakra-ui/layout';
+import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@chakra-ui/toast';
+import { useState } from 'react';
+import { Button } from '@chakra-ui/button';
+import axios from '../../api/axios';
+import { ChatState } from '../../Context/ChatProvider';
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -24,11 +24,11 @@ const Login = () => {
     setLoading(true);
     if (!email || !password) {
       toast({
-        title: "Please Fill all the Feilds",
-        status: "warning",
+        title: 'Please Fill all the Feilds',
+        status: 'warning',
         duration: 5000,
         isClosable: true,
-        position: "bottom",
+        position: 'bottom',
       });
       setLoading(false);
       return;
@@ -37,47 +37,47 @@ const Login = () => {
     try {
       const config = {
         headers: {
-          "Content-type": "application/json",
+          'Content-type': 'application/json',
         },
         withCredentials: true,
       };
       const { data } = await axios.post(
-        "/api/user/login",
+        '/api/user/login',
         {
           email,
           password,
         },
-        config
+        config,
       );
 
       toast({
-        title: "Login Successful",
-        status: "success",
+        title: 'Login Successful',
+        status: 'success',
         duration: 5000,
         isClosable: true,
-        position: "bottom",
+        position: 'bottom',
       });
 
       localStorage.setItem(
-        "Info",
+        'Info',
         JSON.stringify({
           name: data?.name,
           _id: data?._id,
           email: data?.email,
           pic: data?.pic,
-        })
+        }),
       );
       setAuth(data);
       setLoading(false);
-      navigate("/chats");
+      navigate('/chats');
     } catch (error) {
       toast({
-        title: "Error Occured!",
+        title: 'Error Occured!',
         description: error.response?.data?.message,
-        status: "error",
+        status: 'error',
         duration: 5000,
         isClosable: true,
-        position: "bottom",
+        position: 'bottom',
       });
       setLoading(false);
     }
@@ -90,7 +90,7 @@ const Login = () => {
         <Input
           placeholder="Enter your email"
           onChange={(e) => setEmail(e.target.value)}
-          _focus={{ boxShadow: "0" }}
+          _focus={{ boxShadow: '0' }}
           value={email}
         ></Input>
       </FormControl>
@@ -98,24 +98,19 @@ const Login = () => {
         <FormLabel>password</FormLabel>
         <InputGroup>
           <Input
-            type={show ? "text" : "password"}
+            type={show ? 'text' : 'password'}
             placeholder="Enter your password"
             onChange={(e) => setpassword(e.target.value)}
             value={password}
           ></Input>
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "hide" : "show"}
+              {show ? 'hide' : 'show'}
             </Button>
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      <Button
-        id="submit-btn"
-        width="100%"
-        onClick={submitHandel}
-        isLoading={loading}
-      >
+      <Button id="submit-btn" width="100%" onClick={submitHandel} isLoading={loading}>
         Login
       </Button>
       <Button
@@ -123,8 +118,8 @@ const Login = () => {
         colorScheme="red"
         width="100%"
         onClick={() => {
-          setEmail("guest@lorem.com");
-          setpassword("1234");
+          setEmail('guest@lorem.com');
+          setpassword('1234');
         }}
         isLoading={loading}
       >

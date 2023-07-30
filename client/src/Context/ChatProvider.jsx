@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ChatContext = createContext();
 
@@ -11,9 +11,9 @@ const ChatProvider = ({ children }) => {
 
   const navigate = useNavigate();
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("Info"));
+    const userInfo = JSON.parse(localStorage.getItem('Info'));
     setAuth(userInfo);
-    if (!userInfo) navigate("/");
+    if (!userInfo) navigate('/');
   }, []);
 
   return (

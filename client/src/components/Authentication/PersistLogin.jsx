@@ -1,8 +1,8 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from 'react-router-dom';
 
-import { useState, useEffect } from "react";
-import useRefreshToken from "../../hooks/useRefreshToken";
-import { ChatState } from "../../Context/ChatProvider";
+import { useState, useEffect } from 'react';
+import useRefreshToken from '../../hooks/useRefreshToken';
+import { ChatState } from '../../Context/ChatProvider';
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);

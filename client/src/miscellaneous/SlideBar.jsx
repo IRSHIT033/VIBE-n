@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from 'react';
 import {
   Drawer,
   DrawerBody,
@@ -9,45 +9,28 @@ import {
   Spinner,
   useDisclosure,
   useToast,
-} from "@chakra-ui/react";
-import { Box, Text } from "@chakra-ui/layout";
-import {
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/menu";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import UserList from "../User/UserList";
-import ChatLoading from "./ChatLoading";
-import { Tooltip } from "@chakra-ui/tooltip";
-import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Avatar } from "@chakra-ui/avatar";
-import ProfileModel from "./ProfileModel";
-import { ChatState } from "../Context/ChatProvider";
-import { Button } from "@chakra-ui/react";
-import { getSender } from "../config/ChatAbout";
-import { Effect } from "react-notification-badge";
-import NotificationBadge from "react-notification-badge";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import useLogout from "../hooks/useLogout";
+} from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/layout';
+import { Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/menu';
+import UserList from '../User/UserList';
+import ChatLoading from './ChatLoading';
+import { Tooltip } from '@chakra-ui/tooltip';
+import { BellIcon, ChevronDownIcon, Search2Icon } from '@chakra-ui/icons';
+import { Avatar } from '@chakra-ui/avatar';
+import ProfileModel from './ProfileModel';
+import { ChatState } from '../Context/ChatProvider';
+import { Button } from '@chakra-ui/react';
+import { getSender } from '../config/ChatAbout';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import useLogout from '../hooks/useLogout';
 
 function SlideBar() {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [searchResult, setsearchResult] = useState([]);
   const [loading, setloading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const toast = useToast();
-  const {
-    auth,
-    setSelectedChat,
-    chats,
-    setchats,
-    notification,
-    setNotification,
-  } = ChatState();
+  const { auth, setSelectedChat, chats, setchats, notification, setNotification } = ChatState();
   const axiosPrivate = useAxiosPrivate();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -61,12 +44,11 @@ function SlideBar() {
   const handleSearch = async () => {
     if (!search) {
       toast({
-        title:
-          "Please Enter name or email id of the person that you want to find",
-        status: "warning",
+        title: 'Please Enter name or email id of the person that you want to find',
+        status: 'warning',
         duration: 5000,
         isClosable: true,
-        position: "top-left",
+        position: 'top-left',
       });
       return;
     }
@@ -78,12 +60,12 @@ function SlideBar() {
       setsearchResult(data);
     } catch (err) {
       toast({
-        title: "Error Occured!",
-        descritption: "Failed to load the search Results",
-        status: "error",
-        duration: "5000",
+        title: 'Error Occured!',
+        descritption: 'Failed to load the search Results',
+        status: 'error',
+        duration: '5000',
         isClosable: true,
-        position: "bottom-left",
+        position: 'bottom-left',
       });
     }
   };
@@ -101,12 +83,12 @@ function SlideBar() {
       onClose();
     } catch (err) {
       toast({
-        title: "Error fetching chat",
+        title: 'Error fetching chat',
         description: err.message,
-        statue: "error",
+        statue: 'error',
         duration: 5000,
         isClosable: true,
-        position: "bottom-left",
+        position: 'bottom-left',
       });
     }
   };
@@ -124,29 +106,25 @@ function SlideBar() {
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
-            <FontAwesomeIcon id="sms-icon" icon={faSearch}></FontAwesomeIcon>
-            <Text display={{ base: "none", md: "flex" }} px={4}>
+            <Search2Icon color="yellow.300" />
+            <Text display={{ base: 'none', md: 'flex' }} px={4}>
               Search User
             </Text>
           </Button>
         </Tooltip>
-        <Text fontSize="2xl" fontWeight={"bold"} color={"#fcd12a"}>
-          VIBE'N
+        <Text fontSize="2xl" fontWeight={'bold'} color={'#fcd12a'}>
+          VIBE$&apos;N
         </Text>
         <Box>
           <Menu>
             <MenuButton p={1}>
-              <Box px={{ base: "1px", md: "5px" }}>
-                <NotificationBadge
-                  count={notification.length}
-                  effect={Effect.SCALE}
-                />
-                <BellIcon fontSize={"2xl"} m={1} />
+              <Box px={{ base: '1px', md: '5px' }}>
+                <BellIcon fontSize={'2xl'} m={1} />
               </Box>
             </MenuButton>
             <MenuList>
               <Box p="5px 10px 5px 10px">
-                {!notification.length && "No new Messages"}
+                {!notification.length && 'No new Messages'}
                 {notification.map((n) => (
                   <MenuItem
                     key={n._id}
@@ -165,16 +143,11 @@ function SlideBar() {
           </Menu>
           <Menu>
             <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
-              <Avatar
-                size="sm"
-                cursor="pointer"
-                name={auth?.name}
-                src={auth?.pic}
-              />
+              <Avatar size="sm" cursor="pointer" name={auth?.name} src={auth?.pic} />
             </MenuButton>
             <MenuList>
               <ProfileModel auth={auth}>
-                <MenuItem>My Profile</MenuItem>{" "}
+                <MenuItem>My Profile</MenuItem>{' '}
               </ProfileModel>
               <MenuDivider />
               <MenuItem onClick={logoutHandler}>Logout</MenuItem>

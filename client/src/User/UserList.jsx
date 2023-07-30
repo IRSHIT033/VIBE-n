@@ -1,5 +1,4 @@
-import { Avatar, Box, Text } from "@chakra-ui/react";
-import React from "react";
+import { Avatar, Box, Text } from '@chakra-ui/react';
 
 const UserList = ({ user, handlefunc }) => {
   return (
@@ -7,23 +6,17 @@ const UserList = ({ user, handlefunc }) => {
       onClick={handlefunc}
       cursor="pointer"
       bg="#e8e8e8"
-      _hover={{ background: "#fcd12a", color: "white" }}
+      _hover={{ background: '#fcd12a', color: 'white' }}
       w="100%"
       display="flex"
-      alignItems={"center"}
-      color={"black"}
+      alignItems={'center'}
+      color={'black'}
       px={3}
       py={2}
       mb={2}
-      borderRadius={"lg"}
+      borderRadius={'lg'}
     >
-      <Avatar
-        mr={2}
-        size="sm"
-        cursor="pointer"
-        name={user.name}
-        src={user.pic}
-      />
+      <Avatar mr={2} size="sm" cursor="pointer" name={user.name} src={user.pic} />
       <Box>
         <Text>{user.name}</Text>
         <Text fontSize="xs">

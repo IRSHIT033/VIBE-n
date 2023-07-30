@@ -1,8 +1,8 @@
-import { Route, Routes } from "react-router-dom";
-import HomePage from "./Pages/HomePage";
-import ChatPage from "./Pages/ChatPage";
-import "./App.css";
-import PersistLogin from "./components/Authentication/PersistLogin";
+import { Route, Routes } from 'react-router-dom';
+import HomePage from './Pages/HomePage';
+import ChatPage from './Pages/ChatPage';
+import './App.css';
+import PersistLogin from './components/Authentication/PersistLogin';
 
 function App() {
   return (
