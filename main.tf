@@ -1,4 +1,5 @@
 resource "aws_vpc" "mtc_vpc" {
+  
   cidr_block           = "10.123.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
@@ -88,7 +89,7 @@ resource "aws_instance" "dev_node" {
   }
 
   provisioner "local-exec" {
-    command= templatefile("linux-ssh-config.tpl" ,{
+    command= templatefile("${var.host_os}-ssh-config.tpl" ,{
       hostname = self.public_ip,
       user = "ubuntu",
       identityfile = "~/.ssh/mtckey"

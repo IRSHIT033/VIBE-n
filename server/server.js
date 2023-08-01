@@ -2,33 +2,44 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import colors from "colors";
+import helmet from "helmet";
 import cors from "cors";
 import router from "./routes/userRoutes.js";
 import chatRouter from "./routes/chatRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import { not_found, error_handler } from "./middleware/errorMiddleware.js";
 import cookieParser from "cookie-parser";
+import * as io from "socket.io";
 
 dotenv.config();
 
 connectDB();
 const app = express();
-app.use(express.json());
+
+//security init
+app.use(helmet());
+//cors config
 app.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin: process.env.CLIENT_ORIGIN,
     credentials: true,
     optionsSuccessStatus: 200,
   })
 );
+app.use(express.json());
+
 app.use(cookieParser());
 
 const port = 5000 || process.env.PORT;
 
-app.use("/api/user", router);
-app.use("/api/chat", chatRouter);
-app.use("/api/message", messageRouter);
+//handle routes for user related api requests
+app.use("/api/v1/user", router);
+//handle routes for chat related api requests
+app.use("/api/v1/chat", chatRouter);
+//handle routes for message related api requests
+app.use("/api/v1/message", messageRouter);
 
+//error handling middleware
 app.use(not_found);
 app.use(error_handler);
 
@@ -36,8 +47,7 @@ const server = app.listen(port, () => {
   console.log("server is running on " + port);
 });
 
-import * as io from "socket.io";
-
+//socket io init
 const socketio = new io.Server(server, {
   pingTimeout: 60000,
   cors: {
