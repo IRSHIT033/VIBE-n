@@ -13,7 +13,8 @@ import * as io from "socket.io";
 
 dotenv.config();
 
-connectDB();
+await connectDB();
+
 const app = express();
 
 //security init
@@ -52,6 +53,8 @@ const socketio = new io.Server(server, {
   pingTimeout: 60000,
   cors: {
     origin: process.env.CLIENT_ORIGIN,
+    optionsSuccessStatus: 200,
+    methods: "GET, PUT, POST",
   },
 });
 
