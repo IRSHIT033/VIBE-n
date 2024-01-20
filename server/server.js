@@ -25,6 +25,17 @@ app.use(
     origin: process.env.CLIENT_ORIGIN,
     credentials: true,
     optionsSuccessStatus: 200,
+    methods: "GET, PUT, POST",
+    optionsSuccessStatus: 200,
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "device-remember-token",
+      "Access-Control-Allow-Origin",
+      "Origin",
+      "Accept",
+    ],
   })
 );
 app.use(express.json());
