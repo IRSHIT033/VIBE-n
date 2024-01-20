@@ -38,7 +38,7 @@ const GroupChat = ({ children }) => {
     try {
       setLoading(true);
 
-      const { data } = await axiosPrivate.get(`/api/user?search=${search}`);
+      const { data } = await axiosPrivate.get(`/api/v1/user?search=${search}`);
       setLoading(false);
       setSearchresult(data);
     } catch (err) {
@@ -67,7 +67,7 @@ const GroupChat = ({ children }) => {
     }
 
     try {
-      const { data } = await axiosPrivate.post('/api/chat/group', {
+      const { data } = await axiosPrivate.post('/api/v1/chat/group', {
         name: groupChatName,
         users: JSON.stringify(selectedUsers.map((u) => u._id)),
       });

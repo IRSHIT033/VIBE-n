@@ -55,7 +55,7 @@ function SlideBar() {
     try {
       setloading(true);
 
-      const { data } = await axiosPrivate.get(`/api/user?search=${search}`);
+      const { data } = await axiosPrivate.get(`/api/v1/user?search=${search}`);
       setloading(false);
       setsearchResult(data);
     } catch (err) {
@@ -74,7 +74,7 @@ function SlideBar() {
     try {
       setLoadingChat(true);
 
-      const { data } = await axiosPrivate.post(`/api/chat`, { userId });
+      const { data } = await axiosPrivate.post(`/api/v1/chat`, { userId });
 
       if (!chats.find((c) => c._id === data._id)) setchats([data, ...chats]);
 
