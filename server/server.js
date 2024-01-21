@@ -13,6 +13,7 @@ import cookieParser from "cookie-parser";
 import compression from "compression";
 
 import * as io from "socket.io";
+import health_checkup_route from "./healthcheckup/index.js";
 
 dotenv.config();
 
@@ -68,13 +69,12 @@ app.use("/api/v1/chat", chatRouter);
 //handle routes for message related api requests
 app.use("/api/v1/message", messageRouter);
 
+//health checkup route
+app.use("/api/v1/healthcheckup", health_checkup_route);
+
 //error handling middleware
 app.use(not_found);
 app.use(error_handler);
-
-app.get("/api/v1/healthcheckup", (_, res) => {
-  return res.send({ message: "ok" });
-});
 
 const server = app.listen(port, () => {
   console.log("server is running on " + port);
