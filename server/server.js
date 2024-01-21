@@ -73,7 +73,7 @@ app.use(not_found);
 app.use(error_handler);
 
 app.get("/api/v1/healthcheckup", (_, res) => {
-  return res.status(200);
+  return res.send({ message: "ok" });
 });
 
 const server = app.listen(port, () => {
