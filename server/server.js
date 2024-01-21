@@ -72,7 +72,7 @@ app.use("/api/v1/message", messageRouter);
 app.use(not_found);
 app.use(error_handler);
 
-app.get("/api/v1/healthcheckup", () => {
+app.get("/api/v1/healthcheckup", (_, res) => {
   return res.status(200);
 });
 
