@@ -38,6 +38,7 @@ app.use(
     ],
   })
 );
+
 app.use(express.json());
 
 app.use(cookieParser());
@@ -65,7 +66,17 @@ const socketio = new io.Server(server, {
   cors: {
     origin: process.env.CLIENT_ORIGIN,
     optionsSuccessStatus: 200,
-    methods: "GET, PUT, POST",
+    credentials: true,
+    methods: ["GET", "POST", "PUT"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "device-remember-token",
+      "Access-Control-Allow-Origin",
+      "Origin",
+      "Accept",
+    ],
   },
 });
 
