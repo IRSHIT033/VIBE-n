@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import colors from "colors";
+import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import cors from "cors";
 import router from "./routes/userRoutes.js";
@@ -9,6 +10,8 @@ import chatRouter from "./routes/chatRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import { not_found, error_handler } from "./middleware/errorMiddleware.js";
 import cookieParser from "cookie-parser";
+import compression from "compression";
+
 import * as io from "socket.io";
 
 dotenv.config();
@@ -17,8 +20,12 @@ await connectDB();
 
 const app = express();
 
+// Compress all routes
+app.use(compression());
+
 //security init
 app.use(helmet());
+
 //cors config
 app.use(
   cors({
@@ -38,6 +45,15 @@ app.use(
     ],
   })
 );
+
+// Set up rate limiter: maximum of twenty requests per minute
+
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
 
 app.use(express.json());
 
