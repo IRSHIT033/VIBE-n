@@ -14,12 +14,14 @@ import compression from "compression";
 
 import * as io from "socket.io";
 import health_checkup_route from "./healthcheckup/index.js";
+import swaggerDocs from "./utils/swagger.js";
 
 dotenv.config();
 
 await connectDB();
 
 const app = express();
+const port = 5000 || process.env.PORT;
 
 // Compress all routes
 app.use(compression());
@@ -54,13 +56,11 @@ const limiter = rateLimit({
   max: 20,
 });
 // Apply rate limiter to all requests
-app.use(limiter);
+//app.use(limiter);
 
 app.use(express.json());
 
 app.use(cookieParser());
-
-const port = 5000 || process.env.PORT;
 
 //handle routes for user related api requests
 app.use("/api/v1/user", router);
@@ -69,9 +69,10 @@ app.use("/api/v1/chat", chatRouter);
 //handle routes for message related api requests
 app.use("/api/v1/message", messageRouter);
 
-//health checkup route
-app.use("/api/v1/healthcheckup", health_checkup_route);
+//health checkup
+app.use("/healthcheckup", health_checkup_route);
 
+swaggerDocs(app, port);
 //error handling middleware
 app.use(not_found);
 app.use(error_handler);
