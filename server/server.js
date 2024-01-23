@@ -15,6 +15,7 @@ import compression from "compression";
 import * as io from "socket.io";
 import health_checkup_route from "./healthcheckup/index.js";
 import swaggerDocs from "./utils/swagger.js";
+import { startMetricsServer } from "./utils/metric.js";
 
 dotenv.config();
 
@@ -56,11 +57,14 @@ const limiter = rateLimit({
   max: 20,
 });
 // Apply rate limiter to all requests
-//app.use(limiter);
+app.use(limiter);
 
 app.use(express.json());
 
 app.use(cookieParser());
+
+// monitor the server
+startMetricsServer(app);
 
 //handle routes for user related api requests
 app.use("/api/v1/user", router);
@@ -71,9 +75,10 @@ app.use("/api/v1/message", messageRouter);
 
 //health checkup
 app.use("/healthcheckup", health_checkup_route);
-
+// swagger api docs
 swaggerDocs(app, port);
-//error handling middleware
+
+// error handling middleware
 app.use(not_found);
 app.use(error_handler);
 
