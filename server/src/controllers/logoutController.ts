@@ -1,5 +1,5 @@
-import * as asyncHandler from "express-async-handler"
-import User from "../models/user.model.js";
+import * as asyncHandler from 'express-async-handler';
+import User from '../models/user.model';
 
 const handleLogout = asyncHandler(async (req, res) => {
   // On client, also delete the accessToken
@@ -9,9 +9,9 @@ const handleLogout = asyncHandler(async (req, res) => {
   const refreshToken = cookies.jwt;
 
   // Is refreshToken in db?
-  const foundUser = await User.findOne({ refreshToken }).exec();
+  const foundUser = await User.findOne({refreshToken}).exec();
   if (!foundUser) {
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
+    res.clearCookie('jwt', {httpOnly: true, sameSite: 'none', secure: true});
     res.sendStatus(204);
   }
 
@@ -19,11 +19,11 @@ const handleLogout = asyncHandler(async (req, res) => {
   if (foundUser) {
     foundUser.refreshToken = [];
     await foundUser.save();
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
+    res.clearCookie('jwt', {httpOnly: true, sameSite: 'none', secure: true});
     res.sendStatus(204);
   } else {
-    res.sendStatus(403)
+    res.sendStatus(403);
   }
-})
+});
 
 export default handleLogout;

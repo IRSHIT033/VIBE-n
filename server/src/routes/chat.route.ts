@@ -1,4 +1,4 @@
-import * as express from "express";
+import * as express from 'express';
 import {
   accessChat,
   getChats,
@@ -6,8 +6,8 @@ import {
   renameGroup,
   addToGroup,
   removeFromGroup,
-} from "../controllers/chatController.js";
-import { Auth } from "../middlewares/authMiddleware.js";
+} from '../controllers/chatController';
+import {Auth} from '../middlewares/authMiddleware';
 const chatRouter = express.Router();
 
 // cause all chat related apis are protected
@@ -22,7 +22,7 @@ chatRouter.use(Auth);
  *     summary: Retrieve a list of JSONPlaceholder users
  *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
-chatRouter.route("/").post(accessChat);
+chatRouter.route('/').post(accessChat);
 /**
  * @swagger
  * /api/v1/chat/:
@@ -32,7 +32,7 @@ chatRouter.route("/").post(accessChat);
  *     summary: Retrieve a list of JSONPlaceholder users
  *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
-chatRouter.route("/").get(getChats);
+chatRouter.route('/').get(getChats);
 /**
  * @swagger
  * /api/v1/chat/group/:
@@ -42,7 +42,7 @@ chatRouter.route("/").get(getChats);
  *     summary: Retrieve a list of JSONPlaceholder users
  *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
-chatRouter.route("/group").post(creatGroupChat);
+chatRouter.route('/group').post(creatGroupChat);
 /**
  * @swagger
  * /api/v1/chat/rename/:
@@ -52,7 +52,7 @@ chatRouter.route("/group").post(creatGroupChat);
  *     summary: Retrieve a list of JSONPlaceholder users
  *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
-chatRouter.route("/rename").put(renameGroup);
+chatRouter.route('/rename').put(renameGroup);
 /**
  * @swagger
  * /api/v1/chat/AddTogroup/:
@@ -62,7 +62,7 @@ chatRouter.route("/rename").put(renameGroup);
  *     summary: Retrieve a list of JSONPlaceholder users
  *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
-chatRouter.route("/AddTogroup").put(addToGroup);
+chatRouter.route('/AddTogroup').put(addToGroup);
 /**
  * @swagger
  * /api/v1/chat/removeFromgroup/:
@@ -72,6 +72,6 @@ chatRouter.route("/AddTogroup").put(addToGroup);
  *     summary: Retrieve a list of JSONPlaceholder users
  *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
-chatRouter.route("/removeFromgroup").put(removeFromGroup);
+chatRouter.route('/removeFromgroup').put(removeFromGroup);
 
 export default chatRouter;

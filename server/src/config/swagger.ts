@@ -1,20 +1,20 @@
-import * as swaggerJSDoc from "swagger-jsdoc";
-import * as swaggerUI from "swagger-ui-express";
-import {Express,Response} from "express"
+import * as swaggerJSDoc from 'swagger-jsdoc';
+import * as swaggerUI from 'swagger-ui-express';
+import {Express, Response} from 'express';
 
-const options:swaggerJSDoc.Options = {
+const options: swaggerJSDoc.Options = {
   swaggerDefinition: {
-    openapi: "3.0.0",
+    openapi: '3.0.0',
     info: {
-      title: "Vibe-n API docs",
-      version: "1.0.0",
+      title: 'Vibe-n API docs',
+      version: '1.0.0',
     },
     components: {
       securitySchemas: {
         bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
         },
       },
     },
@@ -24,17 +24,17 @@ const options:swaggerJSDoc.Options = {
       },
     ],
   },
-  apis: ["./routes/*.js", "./healthcheckup/index.js"],
+  apis: ['./routes/*.js', './healthcheckup/index.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 
-function swaggerDocs(app:Express, port:string) {
+function swaggerDocs(app: Express, port: string) {
   //swagger page
-  app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+  app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
   //docs in json format
-  app.get("docs.json", (_, res:Response) => {
-    res.setHeader("Content-type", "application/json");
+  app.get('docs.json', (_, res: Response) => {
+    res.setHeader('Content-type', 'application/json');
     res.send(swaggerSpec);
   });
 

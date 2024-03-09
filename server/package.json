@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=production node server.js",
@@ -11,7 +10,7 @@
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
-    "fix": "gts fix",
+    "fix": "gts fix ",
     "prepare": "npm.cmd run compile",
     "pretest": "npm.cmd run compile",
     "posttest": "npm.cmd run lint"
@@ -19,6 +18,7 @@
   "author": "irshit",
   "license": "ISC",
   "dependencies": {
+    "@typegoose/typegoose": "^12.2.0",
     "bcrypt": "^5.1.0",
     "colors": "^1.4.0",
     "compression": "^1.7.4",
@@ -31,7 +31,7 @@
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.1",
-    "mongoose": "^7.3.4",
+    "mongoose": "^8.1.1",
     "prom-client": "^15.1.0",
     "response-time": "^2.3.2",
     "socket.io": "^4.7.1",
@@ -51,6 +51,7 @@
     "gts": "^5.2.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
 }

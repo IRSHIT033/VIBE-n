@@ -1,5 +1,5 @@
-import { Router } from "express";
-import asyncHandler from "express-async-handler";
+import {Router} from 'express';
+import * as asyncHandler from 'express-async-handler';
 
 const health_checkup_route = Router();
 
@@ -15,18 +15,18 @@ const health_checkup_route = Router();
  *         description: App is up and running
  */
 health_checkup_route.get(
-  "/",
+  '/',
   asyncHandler(async (_, res) => {
     const healthCheck = {
       uptime: process.uptime(),
       responsetime: process.hrtime(),
-      message: "OK",
+      message: 'OK',
       timestamp: Date.now(),
     };
     try {
       res.send(healthCheck);
     } catch (error) {
-      healthCheck.message = error;
+      healthCheck.message = error as string;
       res.status(503).send();
     }
   })

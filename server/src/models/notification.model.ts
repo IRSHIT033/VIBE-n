@@ -1,31 +1,21 @@
-import {
-  DocumentType,
-  Ref,
-  getModelForClass,
-  index,
-  modelOptions,
-  pre,
-  prop,
-} from '@typegoose/typegoose';
-import { Chat } from './chat.model';
-import { User } from './user.model';
+import {Ref, getModelForClass, modelOptions, prop} from '@typegoose/typegoose';
+import {Chat} from './chat.model';
+import {User} from './user.model';
 
-@modelOptions
-  ({ schemaOptions: { timestamps: true } })
-
+@modelOptions({schemaOptions: {timestamps: true}})
 export class Notification {
-  @prop({ ref: () => Chat })
-  sender!: Ref<Chat>
+  @prop({ref: 'Chat'})
+  sender!: Ref<Chat>;
 
-  @prop({ ref: () => User })
-  receiver!: Ref<User>
+  @prop({ref: 'User'})
+  receiver!: Ref<User>;
 
   @prop({})
-  notificationMessage?: string
+  notificationMessage?: string;
 
-  @prop({ default: false })
-  read?: boolean
+  @prop({default: false})
+  read?: boolean;
 }
 
-const notificationModel = getModelForClass(Notification)
+const notificationModel = getModelForClass(Notification);
 export default notificationModel;

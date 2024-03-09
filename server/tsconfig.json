@@ -2,12 +2,17 @@
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "target": "ES5",
+    "module": "CommonJS",
+    "lib": ["ES6"],
+    "allowJs": true,
+    "outDir": "build",
+    "rootDir": "src",
+    "esModuleInterop": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "experimentalDecorators": true,
-    "rootDir": ".",
-    "outDir": "build"
+    "emitDecoratorMetadata": true
   },
-  "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
-  ]
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", "docker"]
 }
