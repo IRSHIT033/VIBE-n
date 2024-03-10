@@ -25,7 +25,7 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
 
         //clearing all the refresh token
         if (hackedUser) {
-          hackedUser.refreshToken = [];
+          hackedUser.refreshToken.splice(0, hackedUser.refreshToken.length);
           await hackedUser.save();
         }
       }
@@ -35,7 +35,7 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
   } else if (foundUser.refreshToken) {
     //Delete refreshToken in db
     const newRefreshTokenArray = foundUser.refreshToken.filter(
-      (rt: string) => rt !== refreshToken
+      (rt) => rt !== refreshToken
     );
 
     // evaluate jwt
@@ -44,6 +44,7 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET!,
       async (err: any, decoded: any) => {
         if (err) {
+
           foundUser.refreshToken = [...newRefreshTokenArray];
           const result = await foundUser.save();
         }
@@ -68,7 +69,9 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
         );
 
         // Saving refreshToken with current user
-        foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
+        foundUser.refreshToken.splice(0, foundUser.refreshToken.length)
+        foundUser.refreshToken.push(...newRefreshTokenArray, newRefreshToken)
+        //foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
         await foundUser.save();
 
         // Creates Secure Cookie with refresh token

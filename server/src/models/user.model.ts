@@ -1,11 +1,14 @@
 import * as bcrypt from 'bcrypt';
 import {
+  Ref,
   getModelForClass,
   index,
   modelOptions,
   pre,
   prop,
 } from '@typegoose/typegoose';
+
+
 
 @index({email: 1})
 @pre<User>('save', async function (next) {
@@ -28,7 +31,7 @@ export class User {
   @prop({unique: true, required: true})
   public email!: string;
 
-  @prop({required: true, minlength: 8, maxLength: 100})
+  @prop({required: true})
   public password!: string;
 
   @prop({
@@ -41,7 +44,7 @@ export class User {
   @prop({required: true, default: false})
   public isAdmin!: boolean;
 
-  @prop({required: true, type: () => [String], default: []})
+  @prop({unique: true, type: [String]})
   public refreshToken!: string[];
 
   async comparePasswords(hashPassword: string) {

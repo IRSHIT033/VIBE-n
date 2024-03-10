@@ -12,6 +12,7 @@ const handleLogin = asyncHandler(async (req: Request, res: Response) => {
 
   const foundUser = await User.findOne({email: email});
 
+
   if (!foundUser) {
     res.sendStatus(401); //Unauthorized
   } else {
@@ -36,23 +37,39 @@ const handleLogin = asyncHandler(async (req: Request, res: Response) => {
 
       // Saving refreshToken with current user
 
-      const newRefreshTokenArray = !cookies?.jwt
-        ? foundUser.refreshToken
-        : foundUser.refreshToken?.filter((rt: string) => rt !== cookies.jwt);
+      let newRefreshTokenArray =
+        !cookies?.jwt
+          ? foundUser.refreshToken
+          : foundUser.refreshToken.filter(rt => rt !== cookies.jwt);
+
 
       if (cookies?.jwt) {
-        res.clearCookie('jwt', {
-          httpOnly: true,
-          sameSite: 'none',
-          secure: true,
-        });
+        /* 
+           Scenario added here: 
+               1) User logs in but never uses RT and does not logout 
+               2) RT is stolen
+               3) If 1 & 2, reuse detection is needed to clear all RTs when user logs in
+           */
+        const refreshToken = cookies.jwt;
+        const foundToken = await User.findOne({refreshToken}).exec();
+        console.log(foundToken);
+
+        // Detected refresh token reuse!
+        if (!foundToken) {
+          console.log('attempted refresh token reuse at login!')
+          // clear out ALL previous refresh tokens
+          newRefreshTokenArray = [];
+        }
+
+        res.clearCookie('jwt', {httpOnly: true, sameSite: 'none', secure: true});
       }
 
-      newRefreshTokenArray.push(newRefreshToken);
 
-      foundUser.refreshToken = newRefreshTokenArray;
-
+      // Saving refreshToken with current user
+      foundUser.refreshToken.slice(0, foundUser.refreshToken.length)
+      foundUser.refreshToken.push(...newRefreshTokenArray, newRefreshToken);
       await foundUser.save();
+
 
       // Creates Secure Cookie with refresh token
       res.cookie('jwt', newRefreshToken, {
