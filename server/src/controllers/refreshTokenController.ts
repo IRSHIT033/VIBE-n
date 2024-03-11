@@ -25,14 +25,14 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
 
         //clearing all the refresh token
         if (hackedUser) {
-          hackedUser.refreshToken.splice(0, hackedUser.refreshToken.length);
+          hackedUser.refreshToken = [];
           await hackedUser.save();
         }
       }
     );
 
     res.sendStatus(403); //Forbidden
-  } else if (foundUser.refreshToken) {
+  } else {
     //Delete refreshToken in db
     const newRefreshTokenArray = foundUser.refreshToken.filter(
       (rt) => rt !== refreshToken
@@ -69,9 +69,8 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
         );
 
         // Saving refreshToken with current user
-        foundUser.refreshToken.splice(0, foundUser.refreshToken.length)
-        foundUser.refreshToken.push(...newRefreshTokenArray, newRefreshToken)
-        //foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
+
+        foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
         await foundUser.save();
 
         // Creates Secure Cookie with refresh token
@@ -85,8 +84,6 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
         res.json({accessToken});
       }
     );
-  } else {
-    res.status(400)
   }
 });
 export default handleRefreshToken;

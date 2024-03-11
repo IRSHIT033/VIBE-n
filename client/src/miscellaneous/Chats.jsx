@@ -12,35 +12,33 @@ const Chats = ({ fetch }) => {
   const { auth, selectedChat, setSelectedChat, chats, setchats } = ChatState();
   const axiosPrivate = useAxiosPrivate();
   const toast = useToast();
+  const fetchChats = async () => {
+    try {
+      const { data } = await axiosPrivate.get('/api/v1/chat');
+      //isMounted &&
+      setchats(data);
+    } catch (err) {
+      toast({
+        title: 'Error Occured!',
+        description: 'Failed to Load the chats',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'bottom-left',
+      });
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
+    // let isMounted = true;
+    // const controller = new AbortController();
 
-    const fetchChats = async () => {
-      try {
-        const { data } = await axiosPrivate.get('/api/v1/chat', {
-          signal: controller.signal,
-        });
-        isMounted && setchats(data);
-      } catch (err) {
-        console.error(err);
-        toast({
-          title: 'Error Occured!',
-          description: 'Failed to Load the chats',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-          position: 'bottom-left',
-        });
-      }
-    };
     fetchChats();
 
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
+    // return () => {
+    //   isMounted = false;
+    //   controller.abort();
+    // };
   }, [fetch]);
 
   return (

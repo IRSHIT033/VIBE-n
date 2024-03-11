@@ -38,7 +38,6 @@ const socketInit = (server: Server) => {
     });
 
     socket.on('newMsg', newMsgReceived => {
-      console.log('new msg send by', newMsgReceived.sender._id);
       const chat = newMsgReceived.chat;
       if (!chat.users) return console.log('chat.users not defined');
       chat.users.forEach((user: any) => {

@@ -40,7 +40,7 @@ const handleLogin = asyncHandler(async (req: Request, res: Response) => {
       let newRefreshTokenArray =
         !cookies?.jwt
           ? foundUser.refreshToken
-          : foundUser.refreshToken.filter(rt => rt !== cookies.jwt);
+          : foundUser.refreshToken?.filter(rt => rt !== cookies.jwt);
 
 
       if (cookies?.jwt) {
@@ -52,7 +52,7 @@ const handleLogin = asyncHandler(async (req: Request, res: Response) => {
            */
         const refreshToken = cookies.jwt;
         const foundToken = await User.findOne({refreshToken}).exec();
-        console.log(foundToken);
+
 
         // Detected refresh token reuse!
         if (!foundToken) {
@@ -66,8 +66,8 @@ const handleLogin = asyncHandler(async (req: Request, res: Response) => {
 
 
       // Saving refreshToken with current user
-      foundUser.refreshToken.slice(0, foundUser.refreshToken.length)
-      foundUser.refreshToken.push(...newRefreshTokenArray, newRefreshToken);
+      foundUser.refreshToken?.slice(0, foundUser.refreshToken.length)
+      foundUser.refreshToken?.push(...newRefreshTokenArray, newRefreshToken);
       await foundUser.save();
 
 

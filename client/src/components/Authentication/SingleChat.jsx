@@ -12,8 +12,7 @@ import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import { socket } from '../../socket/socket';
 let selectedChatCompare;
 const SingleChat = ({ fetch, setfetch }) => {
-  const axiosPrivateFetchMsg = useAxiosPrivate();
-  const axiosPrivateSendMsg = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
   const [msg, setMsg] = useState([]);
   const [replyingTo, setReplyingTo] = useState();
   const [loading, setLoading] = useState(false);
@@ -38,7 +37,7 @@ const SingleChat = ({ fetch, setfetch }) => {
     if (!selectedChat) return;
     try {
       setLoading(true);
-      const { data } = await axiosPrivateFetchMsg.get(`/api/v1/message/${selectedChat._id}`);
+      const { data } = await axiosPrivate.get(`/api/v1/message/${selectedChat._id}`);
       setLoading(false);
       setMsg(data);
       socket.emit('joinRoom', selectedChat._id);
@@ -56,24 +55,23 @@ const SingleChat = ({ fetch, setfetch }) => {
   const sendMsg = async (e) => {
     if (e.key === 'Enter' && newMsg) {
       socket.emit('typing stopped', selectedChat._id);
+
       try {
         setNewMsg('');
-        const { data } = await axiosPrivateSendMsg.post('/api/v1/message', {
+        const body = {
           content: newMsg,
           chatId: selectedChat._id,
-          replyingTo: replyingTo._id,
-        });
+        };
+
+        if (replyingTo?._id) {
+          body.replyingTo = replyingTo._id;
+        }
+        const { data } = await axiosPrivate.post('/api/v1/message', body);
         socket.emit('newMsg', data);
         setMsg([...msg, data]);
         setReplyingTo(null);
       } catch (err) {
-        toast({
-          title: 'Error Occured!',
-          status: 'Failed to send the message',
-          duration: 5000,
-          isClosable: true,
-          position: 'bottom',
-        });
+        console.log(err);
       }
     }
   };

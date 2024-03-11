@@ -23,6 +23,6 @@ router.post('/login', handleLogin);
 router.route('/').get(Auth, allUser);
 router.route('/currentuser').get(Auth, getCurrentUser);
 router.get('/logout', Auth, handleLogout);
-router.get('/refresh', Auth, handleRefreshToken);
+router.get('/refresh', handleRefreshToken);
 
 export default router;

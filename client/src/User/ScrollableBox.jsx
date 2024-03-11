@@ -6,7 +6,6 @@ import { ChatState } from '../Context/ChatProvider';
 
 const ScrollableBox = ({ componentRef, msg, setReplyingTo }) => {
   const { auth } = ChatState();
-  console.log(msg);
   return (
     <Stack overflowY={'scroll'} ref={componentRef}>
       {msg &&

@@ -6,6 +6,7 @@ import {CustomRequest} from '../middlewares/authMiddleware';
 
 export const sendMessage = asyncHandler(async (req, res) => {
   const {content, chatId, replyingTo} = req.body;
+
   if (!content || !chatId) {
     console.log('INVALID DATA PASSSED INTO REQUEST');
     res.sendStatus(400);
@@ -16,14 +17,16 @@ export const sendMessage = asyncHandler(async (req, res) => {
     chat: chatId,
     replyingTo: replyingTo,
   };
+  console.log(chatId);
+
   try {
     let message = await Message.create(newMessage);
-    console.log(message);
+
     message = await message.populate('sender', 'name pic')
-    console.log(message);
+
 
     message = await message.populate('chat');
-    console.log(message);
+
 
     if (replyingTo) {
       message = await message.populate('replyingTo');
