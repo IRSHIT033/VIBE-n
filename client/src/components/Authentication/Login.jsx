@@ -110,12 +110,21 @@ const Login = () => {
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      <Button id="submit-btn" width="100%" onClick={submitHandel} isLoading={loading}>
+      <Button
+        bg="#1A202C"
+        _hover={{ backgroundColor: '#F7FAFC', color: '#1A202C' }}
+        color="#F7FAFC"
+        m={3}
+        width="100%"
+        onClick={submitHandel}
+        isLoading={loading}
+      >
         Login
       </Button>
       <Button
-        variant="solid"
-        colorScheme="red"
+        bg="#1A202C"
+        _hover={{ backgroundColor: '#F7FAFC', color: '#1A202C' }}
+        color="#F7FAFC"
         width="100%"
         onClick={() => {
           setEmail('guest@lorem.com');

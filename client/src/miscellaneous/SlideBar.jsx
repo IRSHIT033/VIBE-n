@@ -99,21 +99,21 @@ function SlideBar() {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        bg="white"
+        bg="#2D3748"
         w="100%"
+        color="#4A5568"
         p="5px 10px 5px 10px"
-        borderWidth="5px"
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
-            <Search2Icon color="yellow.300" />
-            <Text display={{ base: 'none', md: 'flex' }} px={4}>
+            <Search2Icon color="#718096" />
+            <Text display={{ base: 'none', md: 'flex' }} color="#718096" px={4}>
               Search User
             </Text>
           </Button>
         </Tooltip>
-        <Text fontSize="2xl" fontWeight={'bold'} color={'#fcd12a'}>
-          VIBE$&apos;N
+        <Text fontSize="2xl" fontWeight={'bold'} color={'#F7FAFC'}>
+          VIBE&apos;N
         </Text>
         <Box>
           <Menu>

@@ -27,7 +27,8 @@ const ScrollableBox = ({ componentRef, msg, setReplyingTo }) => {
                     />
                   </Tooltip>
                   <Box
-                    bg={m?.replyingTo.sender._id === auth._id ? '#f5f5f5' : '#fcd12a'}
+                    bg={m?.replyingTo.sender._id === auth._id ? '#f5f5f5' : '#1A202C'}
+                    color={m?.replyingTo.sender._id === auth._id ? '#1A202C' : '#F7FAFC'}
                     borderRadius="20px"
                     padding="5px 15px"
                   >
@@ -46,7 +47,8 @@ const ScrollableBox = ({ componentRef, msg, setReplyingTo }) => {
 
               <span
                 style={{
-                  backgroundColor: `${m.sender._id === auth._id ? '#f5f5f5' : '#fcd12a'}`,
+                  backgroundColor: `${m.sender._id === auth._id ? '#f5f5f5' : '#1A202C'}`,
+                  color: `${m.sender._id === auth._id ? '#1A202C' : '#F7FAFC'}`,
                   borderRadius: '20px',
                   padding: '5px 15px',
                   cursor: 'pointer',

@@ -189,7 +189,7 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
                 value={groupName}
                 onChange={(e) => setgroupName(e.target.value)}
               ></Input>
-              <Button variant="solid" colorScheme={'yellow'} ml={1} isLoading={renameloading} onClick={handleRename}>
+              <Button variant="solid" colorScheme={'teal'} ml={1} isLoading={renameloading} onClick={handleRename}>
                 Update
               </Button>
             </FormControl>

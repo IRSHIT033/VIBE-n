@@ -47,7 +47,9 @@ const Chats = ({ fetch }) => {
       flexDir="column"
       alignItems={'center'}
       p={3}
-      bg="white"
+      bg="#2D3748"
+      color="#4A5568"
+      border={'none'}
       w={{ base: '100%', md: '31%' }}
       borderRadius={'lg'}
       borderWidth={'1px'}
@@ -72,7 +74,7 @@ const Chats = ({ fetch }) => {
         display="flex"
         flexDir="column"
         p={3}
-        bg="#f8f8f8"
+        bg="#4A5568"
         width="100%"
         height="100%"
         borderRadius={'lg'}
@@ -86,7 +88,7 @@ const Chats = ({ fetch }) => {
                   setSelectedChat(chat);
                 }}
                 cursor={'pointer'}
-                bg={selectedChat === chat ? '#fcd12a' : '#e8e8e8'}
+                bg={selectedChat === chat ? '#1A202C' : '#e8e8e8'}
                 color={selectedChat === chat ? 'white' : 'black'}
                 px={3}
                 py={2}

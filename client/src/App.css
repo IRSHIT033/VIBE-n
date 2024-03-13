@@ -1,8 +1,7 @@
 .App {
   min-height: 100vh;
   display: flex;
-  background: rgb(248, 253, 37);
-  background: radial-gradient(circle, rgba(248, 253, 37, 0.9923319669664741) 0%, rgba(255, 166, 0, 1) 100%);
+  background: #1a202c;
 }
 
 #submit-btn {

@@ -167,7 +167,7 @@ const SingleChat = ({ fetch, setfetch }) => {
             flexDir={'column'}
             justifyContent={'flex-end'}
             p={3}
-            bg={'#e8e8e8'}
+            bg={'#4A5568'}
             borderRadius={'lg'}
             width={'100%'}
             height={'100%'}
@@ -181,20 +181,18 @@ const SingleChat = ({ fetch, setfetch }) => {
             <FormControl onKeyDown={sendMsg} isRequired mt={3}>
               {isTyping ? <Text>Typing...</Text> : <></>}
               {replyingTo && (
-                <Box p={3} bg="#e0e0e0">
+                <Box p={3} bg="#718096" mb={2} borderRadius={'5px'} color="#F7FAFC">
                   <strong>Replying to :</strong> {replyingTo?.content}
-                  <SmallCloseIcon
-                    boxSize={9}
-                    color="yellow.400"
-                    mx={2}
-                    cursor="pointer"
-                    onClick={() => setReplyingTo(null)}
-                  />
+                  <SmallCloseIcon boxSize={9} mx={2} cursor="pointer" onClick={() => setReplyingTo(null)} />
                 </Box>
               )}
               <Input
                 variant={'filled'}
-                bg="#e0e0e0"
+                bg={'#F7FAFC'}
+                color={'#2D3748'}
+                _hover={{ backgroundColor: '#F7FAFC' }}
+                _focus={{ backgroundColor: '#F7FAFC' }}
+                border="none"
                 placeholder="enter a message.."
                 onChange={typingHandler}
                 value={newMsg}

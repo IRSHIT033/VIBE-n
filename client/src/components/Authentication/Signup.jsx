@@ -5,11 +5,15 @@ import { VStack } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/toast';
 import axios from '../../api/axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChatState } from '../../Context/ChatProvider';
 
 const Signup = () => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
+  const navigate = useNavigate();
+  const { setAuth } = ChatState();
 
   const [name, setName] = useState();
   const [email, setEmail] = useState();
@@ -58,6 +62,27 @@ const Signup = () => {
         },
         config,
       );
+
+      const { data } = await axios.post(
+        '/api/v1/user/login',
+        {
+          email,
+          password,
+        },
+        config,
+      );
+
+      localStorage.setItem(
+        'Info',
+        JSON.stringify({
+          name: data?.name,
+          _id: data?._id,
+          email: data?.email,
+          pic: data?.pic,
+        }),
+      );
+      setAuth(data);
+
       toast({
         title: 'Registration Successful',
         status: 'success',
@@ -67,6 +92,7 @@ const Signup = () => {
       });
 
       setPicLoading(false);
+      navigate('/chats');
     } catch (error) {
       toast({
         title: 'Error Occured!',
@@ -126,7 +152,7 @@ const Signup = () => {
     <VStack spacing="5px">
       <FormControl id="first-name" color="black" isRequired>
         <FormLabel>Name</FormLabel>
-        <Input placeholder="Enter Your Name" onChange={(e) => setName(e.target.value)} />
+        <Input focusBorderColor="none" placeholder="Enter Your Name" onChange={(e) => setName(e.target.value)} />
       </FormControl>
       <FormControl id="email" color="black" isRequired>
         <FormLabel>Email Address</FormLabel>
@@ -167,12 +193,13 @@ const Signup = () => {
         <Input type="file" p={1.5} accept="image/*" onChange={(e) => postDetails(e.target.files[0])} />
       </FormControl>
       <Button
-        colorScheme="blue"
+        bg="#1A202C"
+        _hover={{ backgroundColor: '#F7FAFC', color: '#1A202C' }}
+        color="#F7FAFC"
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
         isLoading={picLoading}
-        id="submit-btn"
       >
         Sign Up
       </Button>
