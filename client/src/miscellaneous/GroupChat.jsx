@@ -150,7 +150,7 @@ const GroupChat = ({ children }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="teal" mr={3} onClick={handleSubmit}>
+            <Button color="#F7FAFC" bg="#1A202C" _hover={{ backgroundColor: '#1A202C' }} mr={3} onClick={handleSubmit}>
               Create
             </Button>
           </ModalFooter>

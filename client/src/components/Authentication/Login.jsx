@@ -88,9 +88,11 @@ const Login = () => {
       <FormControl id="email" color="black" isRequired>
         <FormLabel>Email</FormLabel>
         <Input
+          variant="filled"
+          focusBorderColor="black"
+          _active={{ borderColor: 'black' }}
           placeholder="Enter your email"
           onChange={(e) => setEmail(e.target.value)}
-          _focus={{ boxShadow: '0' }}
           value={email}
         ></Input>
       </FormControl>
@@ -98,6 +100,8 @@ const Login = () => {
         <FormLabel>password</FormLabel>
         <InputGroup>
           <Input
+            variant="filled"
+            focusBorderColor="black"
             type={show ? 'text' : 'password'}
             placeholder="Enter your password"
             onChange={(e) => setpassword(e.target.value)}

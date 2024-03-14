@@ -152,12 +152,12 @@ const SingleChat = ({ fetch, setfetch }) => {
             />
             {!selectedChat.isGroupChat ? (
               <>
-                {getSender(auth, selectedChat.users)}
+                <Text color="#A0AEC0">{getSender(auth, selectedChat.users)}</Text>
                 <ProfileModal auth={getSenderObject(auth, selectedChat.users)} />
               </>
             ) : (
               <>
-                {selectedChat.chatName.toUpperCase()}
+                <Text color="#A0AEC0">{selectedChat.chatName.toUpperCase()}</Text>
                 <UpDateGroup fetch={fetch} setfetch={setfetch} fetchMsg={fetchMsg} />
               </>
             )}
@@ -202,7 +202,7 @@ const SingleChat = ({ fetch, setfetch }) => {
         </>
       ) : (
         <Box display={'flex'} alignItems="center" justifyContent={'center'} height="100%">
-          <Text fontSize={'3xl'} pb={3}>
+          <Text fontSize={'3xl'} pb={3} color="#F7FAFC">
             Click on a user to start chat
           </Text>
         </Box>

@@ -101,13 +101,14 @@ function SlideBar() {
         alignItems="center"
         bg="#2D3748"
         w="100%"
-        color="#4A5568"
+        color="#F7FAFC"
+        _hover={{ color: '#1A202C' }}
         p="5px 10px 5px 10px"
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
-          <Button variant="ghost" onClick={onOpen}>
-            <Search2Icon color="#718096" />
-            <Text display={{ base: 'none', md: 'flex' }} color="#718096" px={4}>
+          <Button variant="ghost" _active={{ color: '#1A202C' }} _hover={{ color: '#1A202C' }} onClick={onOpen}>
+            <Search2Icon color="#F7FAFC" />
+            <Text display={{ base: 'none', md: 'flex' }} color="#F7FAFC" px={4}>
               Search User
             </Text>
           </Button>
@@ -118,7 +119,7 @@ function SlideBar() {
         <Box>
           <Menu>
             <MenuButton p={1}>
-              <Box px={{ base: '1px', md: '5px' }}>
+              <Box px={{ base: '1px', md: '5px' }} color={'#F7FAFC'}>
                 <BellIcon fontSize={'2xl'} m={1} />
               </Box>
             </MenuButton>

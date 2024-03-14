@@ -12,10 +12,10 @@ const HomePage = () => {
       <Box p={4} bg={'#718096'} color={'white'} w="100%" m="40px 0 15px 0" borderRadius="lg">
         <Tabs variant="soft-rounded">
           <TabList mb="1em">
-            <Tab width="50%" _focus={{ boxShadow: '0' }} _selected={{ bg: '#171923', color: '#F7FAFC' }}>
+            <Tab width="50%" color="#1A202C" _selected={{ bg: '#171923', color: '#F7FAFC' }}>
               Login
             </Tab>
-            <Tab width="50%" _focus={{ boxShadow: '0' }} _selected={{ bg: '#171923', color: '#F7FAFC' }}>
+            <Tab width="50%" color="#1A202C" _selected={{ bg: '#171923', color: '#F7FAFC' }}>
               Sign-up
             </Tab>
           </TabList>

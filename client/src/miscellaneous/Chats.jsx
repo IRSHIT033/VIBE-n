@@ -62,10 +62,11 @@ const Chats = ({ fetch }) => {
         width="100%"
         justifyContent={'space-between'}
         alignItems={'center'}
+        color="#F7FAFC"
       >
         Chats
         <GroupChat>
-          <Button display="flex" fontSize={{ base: '17px', md: '10px', lg: '17px' }} rightIcon={<AddIcon />}>
+          <Button display="flex" fontSize={{ base: '7px', md: '10px', lg: '17px' }} rightIcon={<AddIcon />}>
             Create New Group
           </Button>
         </GroupChat>

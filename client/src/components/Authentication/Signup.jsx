@@ -152,16 +152,29 @@ const Signup = () => {
     <VStack spacing="5px">
       <FormControl id="first-name" color="black" isRequired>
         <FormLabel>Name</FormLabel>
-        <Input focusBorderColor="none" placeholder="Enter Your Name" onChange={(e) => setName(e.target.value)} />
+        <Input
+          variant="filled"
+          focusBorderColor="black"
+          placeholder="Enter Your Name"
+          onChange={(e) => setName(e.target.value)}
+        />
       </FormControl>
       <FormControl id="email" color="black" isRequired>
         <FormLabel>Email Address</FormLabel>
-        <Input type="email" placeholder="Enter Your Email Address" onChange={(e) => setEmail(e.target.value)} />
+        <Input
+          variant="filled"
+          focusBorderColor="black"
+          type="email"
+          placeholder="Enter Your Email Address"
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </FormControl>
       <FormControl id="password" color="black" isRequired>
         <FormLabel>Password</FormLabel>
         <InputGroup size="md">
           <Input
+            variant="filled"
+            focusBorderColor="black"
             type={show ? 'text' : 'password'}
             placeholder="Enter Password"
             onChange={(e) => setPassword(e.target.value)}
@@ -177,6 +190,8 @@ const Signup = () => {
         <FormLabel>Confirm Password</FormLabel>
         <InputGroup size="md">
           <Input
+            variant="filled"
+            focusBorderColor="black"
             type={show ? 'text' : 'password'}
             placeholder="Confirm password"
             onChange={(e) => setConfirmpassword(e.target.value)}
@@ -190,7 +205,14 @@ const Signup = () => {
       </FormControl>
       <FormControl id="pic" color="black">
         <FormLabel>Upload your Picture</FormLabel>
-        <Input type="file" p={1.5} accept="image/*" onChange={(e) => postDetails(e.target.files[0])} />
+        <Input
+          variant="filled"
+          focusBorderColor="black"
+          type="file"
+          p={1.5}
+          accept="image/*"
+          onChange={(e) => postDetails(e.target.files[0])}
+        />
       </FormControl>
       <Button
         bg="#1A202C"

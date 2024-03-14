@@ -12,7 +12,7 @@ const BadgeUser = ({ user, handle }) => {
         mb={2}
         variant="solid"
         fontSize={12}
-        backgroundColor={'#319795'}
+        backgroundColor={'#1A202C'}
         color={'white'}
         cursor="pointer"
         onClick={handle}

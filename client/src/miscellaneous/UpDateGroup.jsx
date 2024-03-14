@@ -189,7 +189,15 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
                 value={groupName}
                 onChange={(e) => setgroupName(e.target.value)}
               ></Input>
-              <Button variant="solid" colorScheme={'teal'} ml={1} isLoading={renameloading} onClick={handleRename}>
+              <Button
+                variant="solid"
+                bg={'#1A202C'}
+                color="#F7FAFC"
+                _hover={{ backgroundColor: '#1A202C' }}
+                ml={1}
+                isLoading={renameloading}
+                onClick={handleRename}
+              >
                 Update
               </Button>
             </FormControl>
@@ -201,7 +209,7 @@ const UpDateGroup = ({ fetch, setfetch, fetchMsg }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme={'red'} mr={3} onClick={() => handleremove(auth)}>
+            <Button bg={'#A0AEC0'} _hover={{ backgroundColor: '#A0AEC0' }} mr={3} onClick={() => handleremove(auth)}>
               Leave Group
             </Button>
           </ModalFooter>
