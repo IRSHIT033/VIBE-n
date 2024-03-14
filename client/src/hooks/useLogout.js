@@ -1,16 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import axios from '../api/axios';
+import { axiosPrivate } from '../api/axios';
 import { ChatState } from '../Context/ChatProvider';
 
 const useLogout = () => {
   const { setAuth } = ChatState();
   const navigate = useNavigate();
   const logout = async () => {
-    setAuth({});
     try {
-      await axios('/api/v1/user/logout', {
+      await axiosPrivate.get('/api/v1/user/logout', {
         withCredentials: true,
       });
+      setAuth({});
       localStorage.removeItem('Info');
       navigate('/');
     } catch (err) {

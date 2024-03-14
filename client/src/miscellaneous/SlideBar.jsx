@@ -148,10 +148,12 @@ function SlideBar() {
             </MenuButton>
             <MenuList>
               <ProfileModel auth={auth}>
-                <MenuItem>My Profile</MenuItem>{' '}
+                <MenuItem color="#171923"> My Profile</MenuItem>{' '}
               </ProfileModel>
               <MenuDivider />
-              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+              <MenuItem onClick={logoutHandler} color="#171923">
+                Logout
+              </MenuItem>
             </MenuList>
           </Menu>
         </Box>

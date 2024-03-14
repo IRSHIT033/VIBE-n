@@ -4,7 +4,10 @@ import * as jwt from 'jsonwebtoken';
 
 const handleRefreshToken = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
-  if (!cookies?.jwt) res.sendStatus(401);
+  if (!cookies?.jwt) {
+    res.sendStatus(401);
+    return
+  }
   const refreshToken = cookies.jwt;
 
   res.clearCookie('jwt', {httpOnly: true, sameSite: 'none', secure: true});
@@ -32,6 +35,7 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
     );
 
     res.sendStatus(403); //Forbidden
+    return
   } else {
     //Delete refreshToken in db
     const newRefreshTokenArray = foundUser.refreshToken.filter(

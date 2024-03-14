@@ -66,8 +66,8 @@ const handleLogin = asyncHandler(async (req: Request, res: Response) => {
 
 
       // Saving refreshToken with current user
-      foundUser.refreshToken?.slice(0, foundUser.refreshToken.length)
-      foundUser.refreshToken?.push(...newRefreshTokenArray, newRefreshToken);
+
+      foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
       await foundUser.save();
 
 
