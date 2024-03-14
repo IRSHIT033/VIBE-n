@@ -8,7 +8,6 @@ export const sendMessage = asyncHandler(async (req, res) => {
   const {content, chatId, replyingTo} = req.body;
 
   if (!content || !chatId) {
-    console.log('INVALID DATA PASSSED INTO REQUEST');
     res.sendStatus(400);
   }
   const newMessage = {
@@ -17,7 +16,6 @@ export const sendMessage = asyncHandler(async (req, res) => {
     chat: chatId,
     replyingTo: replyingTo,
   };
-  console.log(chatId);
 
   try {
     let message = await Message.create(newMessage);
