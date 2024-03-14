@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node ./build/index.js",
+    "start": "node ./build/index.js",
     "dev": "tsnode src/index.ts",
     "lint": "gts lint",
     "clean": "gts clean",
-    "compile": "tsc",
+    "compile": "rm -rf build && tsc",
     "fix": "gts fix ",
     "prepare": "npm.cmd run compile",
     "pretest": "npm.cmd run compile",
