@@ -18,6 +18,7 @@ import { ChatState } from '../Context/ChatProvider';
 import BadgeUser from '../User/BadgeUser';
 import UserList from '../User/UserList';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import Loading from '../components/Authentication/Loading';
 
 const GroupChat = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -114,7 +115,7 @@ const GroupChat = ({ children }) => {
   return (
     <>
       {' '}
-      <span onClick={onOpen}>{children}</span>
+      <Box onClick={onOpen}>{children}</Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -140,7 +141,7 @@ const GroupChat = ({ children }) => {
                 />
               ))}
               {loading ? (
-                <div>loading...</div>
+                <Loading size="xl" />
               ) : (
                 searchresult
                   ?.slice(0, 4)

@@ -20,7 +20,7 @@ const SingleChat = ({ fetch, setfetch }) => {
   const [socketconnection, setSocketconnection] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const { auth, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
+  const { auth, selectedChat, setSelectedChat, notification, setNotification, setIsNotified } = ChatState();
 
   const toast = useToast();
   const componentRef = useRef(null);
@@ -67,6 +67,7 @@ const SingleChat = ({ fetch, setfetch }) => {
           body.replyingTo = replyingTo._id;
         }
         const { data } = await axiosPrivate.post('/api/v1/message', body);
+
         socket.emit('newMsg', data);
         setMsg([...msg, data]);
         setReplyingTo(null);
@@ -103,6 +104,7 @@ const SingleChat = ({ fetch, setfetch }) => {
     socket.on('got the msg', (newMsgrecieved) => {
       if (!selectedChatCompare || selectedChatCompare._id !== newMsgrecieved.chat._id) {
         if (!notification.includes(newMsgrecieved)) {
+          setIsNotified(true);
           setNotification([newMsgrecieved, ...notification]);
           setfetch(!fetch);
         }
@@ -144,6 +146,7 @@ const SingleChat = ({ fetch, setfetch }) => {
             justifyContent={{ base: 'space-between' }}
             alignItems="center"
             ref={componentRef}
+            color="#A0AEC0"
           >
             <IconButton
               display={{ base: 'flex', md: 'none' }}
@@ -152,12 +155,12 @@ const SingleChat = ({ fetch, setfetch }) => {
             />
             {!selectedChat.isGroupChat ? (
               <>
-                <Text color="#A0AEC0">{getSender(auth, selectedChat.users)}</Text>
+                {getSender(auth, selectedChat.users)}
                 <ProfileModal auth={getSenderObject(auth, selectedChat.users)} />
               </>
             ) : (
               <>
-                <Text color="#A0AEC0">{selectedChat.chatName.toUpperCase()}</Text>
+                {selectedChat.chatName.toUpperCase()}
                 <UpDateGroup fetch={fetch} setfetch={setfetch} fetchMsg={fetchMsg} />
               </>
             )}
@@ -179,10 +182,10 @@ const SingleChat = ({ fetch, setfetch }) => {
               <ScrollableBox componentRef={componentRef} msg={msg} setReplyingTo={setReplyingTo} />
             )}
             <FormControl onKeyDown={sendMsg} isRequired mt={3}>
-              {isTyping ? <Text>Typing...</Text> : <></>}
+              {isTyping ? <Text color="">Typing...</Text> : <></>}
               {replyingTo && (
                 <Box p={3} bg="#718096" mb={2} borderRadius={'5px'} color="#F7FAFC">
-                  <strong>Replying to :</strong> {replyingTo?.content}
+                  <Text fontWeight="bold">Replying to :</Text> {replyingTo?.content}
                   <SmallCloseIcon boxSize={9} mx={2} cursor="pointer" onClick={() => setReplyingTo(null)} />
                 </Box>
               )}

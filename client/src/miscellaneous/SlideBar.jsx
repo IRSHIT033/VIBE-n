@@ -30,7 +30,7 @@ function SlideBar() {
   const [loading, setloading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const toast = useToast();
-  const { auth, setSelectedChat, chats, setchats, notification, setNotification } = ChatState();
+  const { isNotified, auth, setSelectedChat, chats, setchats, notification, setNotification } = ChatState();
   const axiosPrivate = useAxiosPrivate();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -120,15 +120,17 @@ function SlideBar() {
           <Menu>
             <MenuButton p={1}>
               <Box px={{ base: '1px', md: '5px' }} color={'#F7FAFC'}>
-                <BellIcon fontSize={'2xl'} m={1} />
+                <BellIcon fontSize={'2xl'} m={1} className={isNotified ? 'bell' : ''} />
               </Box>
             </MenuButton>
             <MenuList>
-              <Box p="5px 10px 5px 10px">
+              <Box p="5px 10px 5px 10px" color="#1A202C" _hover={{ color: '#1A202C' }}>
                 {!notification.length && 'No new Messages'}
                 {notification.map((n) => (
                   <MenuItem
                     key={n._id}
+                    color="#1A202C"
+                    _hover={{ color: '#1A202C' }}
                     onClick={() => {
                       setSelectedChat(n.chat);
                       setNotification(notification.filter((i) => i !== n));

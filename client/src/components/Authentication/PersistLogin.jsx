@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useRefreshToken from '../../hooks/useRefreshToken';
 import { ChatState } from '../../Context/ChatProvider';
+import Loading from './Loading';
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +29,7 @@ const PersistLogin = () => {
     return () => (isMounted = false);
   }, []);
 
-  return <>{isLoading ? <p>Loading...</p> : <Outlet />}</>;
+  return <>{isLoading ? <Loading size={'6xl'} /> : <Outlet />}</>;
 };
 
 export default PersistLogin;

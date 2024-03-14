@@ -30,6 +30,7 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
     if (replyingTo) {
       message = await message.populate('replyingTo');
+      message = await message.populate('replyingTo.sender', 'name pic')
     }
 
     const messageWithReply = await User.populate(message, {
@@ -40,6 +41,7 @@ export const sendMessage = asyncHandler(async (req, res) => {
     await Chat.findByIdAndUpdate(req.body.chatId, {
       latestMessage: message,
     });
+
     res.json(messageWithReply ? messageWithReply : message);
   } catch (err: any) {
     res.status(400);
