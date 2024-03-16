@@ -22,7 +22,7 @@ const serverInit = (app: express.Express) => {
 
   //security init
   app.use(helmet());
-
+  app.set('trust proxy', 1)
   //cors config
   CORSconfig(app);
 
