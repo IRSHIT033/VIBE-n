@@ -182,7 +182,7 @@ const SingleChat = ({ fetch, setfetch }) => {
               <ScrollableBox componentRef={componentRef} msg={msg} setReplyingTo={setReplyingTo} />
             )}
             <FormControl onKeyDown={sendMsg} isRequired mt={3}>
-              {isTyping ? <Text color="">Typing...</Text> : <></>}
+              {isTyping ? <Text color="#F7FAFC">Typing...</Text> : <></>}
               {replyingTo && (
                 <Box p={3} bg="#718096" mb={2} borderRadius={'5px'} color="#F7FAFC">
                   <Text fontWeight="bold">Replying to :</Text> {replyingTo?.content}

@@ -14,7 +14,7 @@ export const error_handler = (
 ) => {
   //logEvents(`${err.name}: ${err.message}`, "errorLog.txt");
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  console.log(err.stack);
+
   res.status(statusCode)
   res.json({
     message: err.message,
